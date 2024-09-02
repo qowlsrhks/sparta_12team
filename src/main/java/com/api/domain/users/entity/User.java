@@ -1,10 +1,12 @@
 package com.api.domain.users.entity;
 
 import com.api.domain.common.Timestamped;
+import com.api.domain.users.dto.UserRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Getter
@@ -14,17 +16,25 @@ import lombok.Setter;
 public class User extends Timestamped {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long userId;
-
-    @Column(name = "email", nullable = false, length = 50)
-    String email;
+    private Long userId;
 
     @Column(name = "username", nullable = false, length = 20)
-    String username;
+    private String username;
+
+    @Column(name = "email", nullable = false, length = 50)
+    private String email;
 
     @Column(name = "password", nullable = false, length = 20)
-    String password;
+    private String password;
 
     @Column(name = "introduce", length = 100)
-    String introduce;
+    //@ColumnDefault(" ")
+    private String introduce;
+
+    public User(UserRequestDto requestDto){
+        this.username = requestDto.getUsername();
+        this.email = requestDto.getEmail();
+        this.password = requestDto.getPassword();
+        this.introduce = requestDto.getIntroduce();
+    }
 }
