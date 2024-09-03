@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Setter
@@ -23,5 +25,8 @@ public class Board {
    @ManyToOne(fetch = FetchType.LAZY)
    @JoinColumn(name = "member_id")
     private Member memberId;
+
+   @OneToMany(mappedBy = "board")
+   private List<Comment> comments = new ArrayList<>();
 
 }

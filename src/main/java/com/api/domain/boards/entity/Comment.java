@@ -9,20 +9,26 @@ import org.springframework.web.bind.annotation.PutMapping;
 @Getter
 @Entity
 @NoArgsConstructor
-public class Comment {
+public class Comment  extends Timestamped{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String contents;
+    private String username;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
     private Board board;
 
-    public Comment(String contents, Board board) {
-        this.board = board;
+    public Comment(String contents, String username, Board board) {
         this.contents = contents;
+        this.username = username;
+        this.board = board;
+
     }
 
+    public void update(String contents) {
+        this.contents = contents;
+    }
 }
