@@ -21,20 +21,17 @@ public class UserService {
     public UserResponseDto createUser(UserRequestDto requestDto) {
         // 이메일 형식 검증
         if(!checkEmailPattern(requestDto.getEmail())) {
-            System.out.println("이메일 형식 불일치!!!!!");
-            return null;
+            throw new IllegalArgumentException("이메일 형식이 아닙니다.");
         }
 
         // 중복된 이메일 검증
         if (userRepository.findByEmail(requestDto.getEmail()).isPresent()) {
-            System.out.println("중복된 이메일입니다.");
-            return null;
+            throw new IllegalArgumentException("중복된 이메일입니다.");
         }
 
         // 비밀번호 형식 검증
         if(!PasswordPattern(requestDto.getPassword())) {
-            System.out.println("비밀번호 형식 불일치!!!!!");
-            return null;
+            throw new IllegalArgumentException("영어 대소문자, 숫자, 특수문자가 모두 포함되어야합니다.");
         }
 
         User user = new User(requestDto);
@@ -89,7 +86,7 @@ public class UserService {
 
         // 비밀번호 형식 검증
         if(!PasswordPattern(newPassword)){
-            throw new IllegalArgumentException("비밀번호 형식 불일치!!!!!");
+            throw new IllegalArgumentException("영어 대소문자, 숫자, 특수문자가 모두 포함되어야합니다.");
         }
 
         // 현재 비밀번호와 변경할 비밀번호 일치 여부 확인
@@ -98,7 +95,6 @@ public class UserService {
         }
 
         user.update(user.getUsername(), user.getIntroduce(),newPassword);
-        System.out.println("비밀번호 변경 완료");
     }
 
     // 회원 탈퇴(isMember : true -> false)
@@ -108,8 +104,7 @@ public class UserService {
 
         // 비밀번호 일치 여부 확인
         if(!user.getPassword().equals(requestDto.getPassword())){
-            System.out.println("비밀번호 불일치!!!!!");
-            return null;
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
         user.withdrawUser();
