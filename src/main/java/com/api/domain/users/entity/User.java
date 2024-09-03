@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Getter
@@ -28,13 +27,27 @@ public class User extends Timestamped {
     private String password;
 
     @Column(name = "introduce", length = 100)
-    //@ColumnDefault(" ")
     private String introduce;
+
+    // true : 활성 회원
+    // false : 비활성 회원
+    @Column(nullable = false)
+    private boolean isMember = true;
 
     public User(UserRequestDto requestDto){
         this.username = requestDto.getUsername();
         this.email = requestDto.getEmail();
         this.password = requestDto.getPassword();
         this.introduce = requestDto.getIntroduce();
+    }
+
+    public void update(String username, String introduce, String password) {
+        this.username = username;
+        this.introduce = introduce;
+        this.password = password;
+    }
+
+    public void withdrawUser(){
+        this.isMember = !this.isMember;
     }
 }
