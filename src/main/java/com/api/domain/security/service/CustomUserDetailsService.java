@@ -1,4 +1,4 @@
-package com.api.domain.security;
+package com.api.domain.security.service;
 
 import com.api.domain.users.entity.User;
 import com.api.domain.users.repository.UserRepository;

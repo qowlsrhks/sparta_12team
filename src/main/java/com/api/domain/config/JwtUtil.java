@@ -1,6 +1,6 @@
 package com.api.domain.config;
 
-import com.api.domain.security.CustomUserDetailsService;
+import com.api.domain.security.service.CustomUserDetailsService;
 import com.api.exceptions.InvalidJwtTokenException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
