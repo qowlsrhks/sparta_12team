@@ -1,5 +1,6 @@
 package com.api.domain.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,13 +17,10 @@ import org.springframework.security.web.firewall.StrictHttpFirewall;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SpringConfig {
 
-    private final JwtTokenProvider jwtTokenProvider;
-
-    public SecurityConfig(JwtTokenProvider jwtTokenProvider) {
-        this.jwtTokenProvider = jwtTokenProvider;
-    }
+    private final JwtUtil jwtUtil;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -48,7 +46,7 @@ public class SpringConfig {
                         authorize.requestMatchers("/api/auth/**").permitAll()
                                 .anyRequest().authenticated()
                 )
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class); //JWT 필터 추가
+                .addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class); //JWT 필터 추가
 
         return http.build();
     }
