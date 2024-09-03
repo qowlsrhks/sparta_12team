@@ -1,5 +1,6 @@
 package com.api.domain.auth.controller;
 
+import com.api.domain.auth.dto.LoginRequestDto;
 import com.api.domain.config.JwtUtil;
 import com.api.domain.users.dto.UserRequestDto;
 import com.api.domain.users.dto.UserResponseDto;
@@ -36,5 +37,14 @@ public class AuthController {
     }
 
     //로그인
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequestDto requestDto, HttpServletResponse response) {
+        String answer = authService.login(requestDto);
+
+        String token = jwtUtil.createToken(requestDto.getEmail());
+        jwtUtil.addJwtToHeader(token,response);
+
+        return ResponseEntity.ok(answer);
+    }
 }
 

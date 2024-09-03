@@ -29,7 +29,7 @@ public class JwtUtil {
     // Token 식별자
     public static final String BEARER_PREFIX = "Bearer ";
     // 토큰 만료시간
-    private static final long TOKEN_TIME = 60 * 10 * 1000L;
+    private static final long TOKEN_TIME = 60 * 60 * 1000L;
 
     private final CustomUserDetailsService customUserDetailsService;
 

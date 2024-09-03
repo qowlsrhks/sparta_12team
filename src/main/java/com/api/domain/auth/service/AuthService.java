@@ -1,5 +1,6 @@
 package com.api.domain.auth.service;
 
+import com.api.domain.auth.dto.LoginRequestDto;
 import com.api.domain.config.JwtUtil;
 import com.api.domain.users.dto.UserRequestDto;
 import com.api.domain.users.dto.UserResponseDto;
@@ -8,6 +9,9 @@ import com.api.domain.users.repository.UserRepository;
 import com.api.domain.users.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -43,5 +47,16 @@ public class AuthService {
         User savedUser = userRepository.save(user);
 
         return new UserResponseDto(savedUser);
+    }
+
+    //로그인
+    public String login(LoginRequestDto requestDto) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(requestDto.getEmail(), requestDto.getPassword())
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        return "로그인 성공";
     }
 }
