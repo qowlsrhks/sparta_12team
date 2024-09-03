@@ -1,18 +1,18 @@
 package com.api.domain.boards.dto;
 
-import lombok.Data;
+import com.api.domain.boards.common.Timestamped;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
-public class MemberDto {
+@Getter
+@Setter
+public class MemberDto extends Timestamped {
     private Long memberId;
     private String username;
     private String password;
     private String email;
-    private LocalDateTime createdDate;
-    private LocalDateTime modifiedDate;
     private List<BoardDto> boardId;
 
 }

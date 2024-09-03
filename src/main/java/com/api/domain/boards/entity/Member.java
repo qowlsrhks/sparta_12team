@@ -1,15 +1,14 @@
 package com.api.domain.boards.entity;
 
+import com.api.domain.boards.common.Timestamped;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Getter
 @Setter
-public class Member {
+public class Member extends Timestamped{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
@@ -19,9 +18,5 @@ public class Member {
     private String password;
 
     private String email;
-
-    private LocalDateTime createdDate;
-
-    private LocalDateTime modifiedDate;
 
 }

@@ -1,14 +1,16 @@
 package com.api.domain.boards.entity;
 
+import com.api.domain.boards.common.Timestamped;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.util.Collection;
+
 
 @Entity
 @Setter
 @Getter
-public class Board {
+public class Board extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,12 +18,9 @@ public class Board {
 
     private String contents;
 
-    private LocalDateTime createdDate;
-
-    private LocalDateTime modifiedDate;
-
    @ManyToOne(fetch = FetchType.LAZY)
    @JoinColumn(name = "member_id")
     private Member memberId;
+
 
 }
