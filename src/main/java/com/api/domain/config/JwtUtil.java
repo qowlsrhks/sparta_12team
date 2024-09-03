@@ -47,9 +47,8 @@ public class JwtUtil {
         key = Keys.hmacShaKeyFor(bytes);
     }
 
-    public String createToken(Authentication authentication) {
+    public String createToken(String email) {
         Date date = new Date();
-        String email = authentication.getName();
 
         return BEARER_PREFIX +
                 Jwts.builder()
