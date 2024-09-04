@@ -8,6 +8,7 @@ import com.api.domain.users.repository.UserRepository;
 import com.api.domain.users.util.UserUtil;
 import com.api.exceptions.DeactivatedUserException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final DeleteUserRepository deleteUserRepository;
     private final UserUtil userUtil;
+    private final PasswordEncoder passwordEncoder;
 
     // 모든 회원 조회
     public List<UserResponseDto> getUsers() {
@@ -64,14 +66,14 @@ public class UserService {
     // 비밀번호 변경
     @Transactional
     public void updateUser (Long userId, UserPasswordRequestDto requestDto) {
+
         User user = userUtil.findByUserId(userId);
 
-        String password = user.getPassword();
-        String checkPassword = requestDto.getPassword();
+        String currentPassword = requestDto.getPassword();
         String newPassword = requestDto.getNewPassword();
 
         // 입력받은 비밀번호 검증
-        if(!password.equals(checkPassword)){
+        if(!passwordEncoder.matches(currentPassword, user.getPassword())){
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
@@ -81,11 +83,14 @@ public class UserService {
         }
 
         // 현재 비밀번호와 변경할 비밀번호 일치 여부 확인
-        if(password.equals(newPassword)){
+        if(passwordEncoder.matches(currentPassword, user.getPassword())){
             throw new IllegalArgumentException("현재 비밀번호와 동일합니다.");
         }
 
-        user.update(user.getUsername(), user.getIntroduce(),newPassword);
+        user.update(
+                user.getUsername(),
+                user.getIntroduce(),
+                passwordEncoder.encode(newPassword));
     }
 
     // 회원 탈퇴(isMember : true -> false)
