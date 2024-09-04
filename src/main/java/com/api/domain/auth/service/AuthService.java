@@ -10,7 +10,7 @@ import com.api.domain.users.repository.UserRepository;
 import com.api.domain.users.service.EmailService;
 import com.api.domain.users.util.UserUtil;
 import com.api.exceptions.DeactivatedUserException;
-import com.api.exceptions.VerifyEmailSendedException;
+import com.api.exceptions.VerifyEmailSentException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -69,7 +69,7 @@ public class AuthService {
         // 메일 인증 중인 email 인지 확인
         if(!userUtil.checkAuthEmail(userEmail)){ // 인증번호 발송
             emailService.sendEmail(userEmail);
-            throw new VerifyEmailSendedException("메일이 전송되었습니다. 인증번호와 함께 다시 요청을 보내주십시오.");
+            throw new VerifyEmailSentException("메일이 전송되었습니다. 인증번호와 함께 다시 요청을 보내주십시오.");
         }
 
         // 인증번호 확인
