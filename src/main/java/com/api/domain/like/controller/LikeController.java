@@ -2,10 +2,7 @@ package com.api.domain.like.controller;
 
 import com.api.domain.like.service.LikeService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/boards/likes")
@@ -16,5 +13,10 @@ public class LikeController {
     @PostMapping
     public void liked(@RequestParam Long boardId) {
         likeService.liked(boardId);
+    }
+
+    @DeleteMapping
+    public void cancelLike(@RequestParam Long boardId) {
+        likeService.cancelLike(boardId);
     }
 }
