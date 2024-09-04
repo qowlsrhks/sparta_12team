@@ -1,6 +1,7 @@
 package com.api.domain.users.entity;
 
 import com.api.domain.common.Timestamped;
+import com.api.domain.users.dto.UserCreateRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,17 +15,39 @@ import lombok.Setter;
 public class User extends Timestamped {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long userId;
-
-    @Column(name = "email", nullable = false, length = 50)
-    String email;
+    private Long userId;
 
     @Column(name = "username", nullable = false, length = 20)
-    String username;
+    private String username;
 
-    @Column(name = "password", nullable = false, length = 20)
-    String password;
+    @Column(name = "email", nullable = false, length = 50)
+    private String email;
+
+    @Column(nullable = false)
+    private String password;
 
     @Column(name = "introduce", length = 100)
-    String introduce;
+    private String introduce;
+
+    // true : 활성 회원
+    // false : 비활성 회원
+    @Column(nullable = false)
+    private boolean isMember = true;
+
+    public User(UserCreateRequestDto requestDto){
+        this.username = requestDto.getUsername();
+        this.email = requestDto.getEmail();
+        this.password = requestDto.getPassword();
+        this.introduce = requestDto.getIntroduce();
+    }
+
+    public void update(String username, String introduce, String password) {
+        this.username = username;
+        this.introduce = introduce;
+        this.password = password;
+    }
+
+    public void withdrawUser(){
+        this.isMember = false;
+    }
 }

@@ -6,14 +6,16 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class UserResponseDto {
+public class UserStatusResponseDto {
      private String username;
      private String email;
      private String introduce;
+     private boolean isMember;
 
-     public UserResponseDto(User user){
+     public UserStatusResponseDto(User user){
          this.username = user.getUsername();
          this.email = user.getEmail();
          this.introduce = user.getIntroduce();
+         this.isMember = user.isMember();
      }
 }
