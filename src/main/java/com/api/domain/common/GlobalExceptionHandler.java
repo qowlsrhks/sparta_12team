@@ -1,5 +1,6 @@
 package com.api.domain.common;
 
+import com.api.exceptions.VerifyEmailSentException;
 import jakarta.mail.MessagingException;
 import com.api.exceptions.DeactivatedUserException;
 import org.springframework.http.HttpStatus;
@@ -25,8 +26,16 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
     }
 
+    //403
     @ExceptionHandler({AccessDeniedException.class})
-    public ResponseEntity<String> ForbiddenException(AccessDeniedException e) {
+    public ResponseEntity<String> ForbiddenException(final RuntimeException e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
     }
+
+    //202
+    @ExceptionHandler({VerifyEmailSentException.class})
+    public ResponseEntity<String> VerifyEmailSentException(VerifyEmailSentException e) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(e.getMessage());
+    }
+
 }
