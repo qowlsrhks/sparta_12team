@@ -5,9 +5,10 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class UserRequestDto {
+public class UserCreateRequestDto {
     private String username;
     private String email;
     private String password;
     private String introduce;
+    private int authNumber;
 }

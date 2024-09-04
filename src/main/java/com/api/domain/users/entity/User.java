@@ -1,7 +1,7 @@
 package com.api.domain.users.entity;
 
 import com.api.domain.common.Timestamped;
-import com.api.domain.users.dto.UserRequestDto;
+import com.api.domain.users.dto.UserCreateRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,7 +34,7 @@ public class User extends Timestamped {
     @Column(nullable = false)
     private boolean isMember = true;
 
-    public User(UserRequestDto requestDto){
+    public User(UserCreateRequestDto requestDto){
         this.username = requestDto.getUsername();
         this.email = requestDto.getEmail();
         this.password = requestDto.getPassword();
@@ -48,6 +48,6 @@ public class User extends Timestamped {
     }
 
     public void withdrawUser(){
-        this.isMember = !this.isMember;
+        this.isMember = false;
     }
 }

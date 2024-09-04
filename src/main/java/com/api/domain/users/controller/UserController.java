@@ -29,7 +29,7 @@ public class UserController {
 
     // 회원 정보 수정(회원이름, 소개)
     @PutMapping
-    public ResponseEntity<UserResponseDto> updateUser(@RequestBody UserRequestDto requestDto){
+    public ResponseEntity<UserResponseDto> updateUser(@RequestBody UserModifyRequestDto requestDto){
         return ResponseEntity.ok(userService.updateUser(requestDto));
     }
 
