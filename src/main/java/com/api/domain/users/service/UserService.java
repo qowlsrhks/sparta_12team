@@ -9,6 +9,7 @@ import com.api.domain.users.repository.UserRepository;
 import com.api.domain.users.util.UserUtil;
 import com.api.exceptions.DeactivatedUserException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,7 +51,7 @@ public class UserService {
         User user = userUtil.findByUserId(userId);
 
         if(!user.isMember()){
-            throw new DeactivatedUserException("이미 탈퇴한 회원입니다.");
+            throw new AccessDeniedException("이미 탈퇴한 회원입니다.");
         }
 
         return new UserResponseDto(user);
@@ -59,14 +60,21 @@ public class UserService {
     // 회원 정보 수정(이름, 소개)
     @Transactional
     public UserResponseDto update(UserModifyRequestDto requestDto) {
-        User user = userRepository.findByEmail(requestDto.getEmail()).orElseThrow(() ->
+        User user = userRepository.findByEmail(authService.currentUser().getEmail()).orElseThrow(() ->
                 new NullPointerException("회원이 존재하지 않습니다."));
 
         if(!authService.isUserOwner(user)) {
             throw new IllegalArgumentException("본인만 수정할 수 있습니다.");
         }
 
-        user.update(requestDto.getUsername(), requestDto.getIntroduce(), user.getPassword());
+        if(requestDto.getUsername() != null) {
+            user.setUsername(requestDto.getUsername());
+        }
+        if(requestDto.getIntroduce() != null) {
+            user.setIntroduce(requestDto.getIntroduce());
+        }
+
+        userRepository.save(user);
 
         return new UserResponseDto(user);
     }

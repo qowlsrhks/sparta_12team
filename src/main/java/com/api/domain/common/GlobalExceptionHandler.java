@@ -28,12 +28,12 @@ public class GlobalExceptionHandler {
 
     //403
     @ExceptionHandler({AccessDeniedException.class})
-    public ResponseEntity<String> ForbiddenException(AccessDeniedException e) {
+    public ResponseEntity<String> ForbiddenException(final RuntimeException e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
     }
 
     //202
-    @ExceptionHandler({AccessDeniedException.class})
+    @ExceptionHandler({VerifyEmailSentException.class})
     public ResponseEntity<String> VerifyEmailSentException(VerifyEmailSentException e) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(e.getMessage());
     }
