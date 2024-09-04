@@ -72,7 +72,7 @@ public class BoardService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("등록된 회원을 찾을 수 없습니다"));
 
-        return boardRepository.findByUserAndBoardId(user, boardId)
+        return boardRepository.findByUserAndId(user, boardId)
                 .orElseThrow(() -> new RuntimeException("등록된 게시판을 찾을 수 없습니다"));
     }
 
