@@ -1,18 +1,16 @@
 package com.api.domain.boards.dto;
 
-import com.api.domain.boards.common.Timestamped;
-import com.api.domain.boards.entity.Member;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
-public class BoardDto extends Timestamped {
+public class BoardDto{
 
-    private Long boardId;
+    private final Long boardId;
 
-    private String contents;
+    private final String contents;
 
-    private Member memberId;
-
+    public BoardDto(Long boardId, String contents) {
+        this.boardId = boardId;
+        this.contents = contents;
+    }
 }

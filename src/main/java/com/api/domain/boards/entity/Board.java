@@ -1,14 +1,17 @@
 package com.api.domain.boards.entity;
 
-import com.api.domain.boards.common.Timestamped;
+import com.api.domain.common.Timestamped;
+import com.api.domain.users.entity.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 
 @Entity
-@Setter
 @Getter
+@NoArgsConstructor
 public class Board extends Timestamped {
 
     @Id
@@ -18,9 +21,16 @@ public class Board extends Timestamped {
     private String contents;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "user_id")
     @JsonBackReference
-    private Member memberId;
+    private User userId;
+
+    private LocalDateTime createdAt;
 
 
+    public Board(String contents, User userId) {
+        this.contents = contents;
+        this.userId = userId;
+        this.createdAt = LocalDateTime.now();
+    }
 }

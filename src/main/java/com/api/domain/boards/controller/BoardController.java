@@ -2,17 +2,14 @@ package com.api.domain.boards.controller;
 
 import com.api.domain.boards.dto.BoardDto;
 import com.api.domain.boards.entity.Board;
-import com.api.domain.boards.entity.Member;
 import com.api.domain.boards.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -24,21 +21,18 @@ public class BoardController {
 //    게시물 생성
     @PostMapping("/boards/{memberId}")
     public ResponseEntity<Board> createBoard(@PathVariable Long memberId, @RequestBody BoardDto boardDto) {
-        Board board = boardService.createBoard(memberId,boardDto);
-        return ResponseEntity.ok(board);
+        return ResponseEntity.ok( boardService.createBoard(memberId,boardDto));
     }
 
 //    뉴스피드 목록
     @GetMapping("/boards/{memberId}/friendBoardList")
     public ResponseEntity<Page<Board>> getFriendBoardList(@PathVariable Long memberId,@RequestParam int page) {
-        boardService.getFriendBoardList(memberId, page);
         return ResponseEntity.ok(boardService.getFriendBoardList(memberId, page));
     }
 
 //    뉴스피드 조회
     @GetMapping("/boards/{memberId}/{boardId}friendBoard")
     public ResponseEntity<Page<Board>> getFriendBoard(@PathVariable Long memberId, @PathVariable Long boardId, @RequestParam int page) {
-        boardService.getFriendBoard(memberId, page);
         return ResponseEntity.ok(boardService.getFriendBoard(memberId, page));
     }
 
@@ -52,8 +46,7 @@ public class BoardController {
 //    유저 게시물 조회
     @GetMapping("/boards/{memberId}/{boardId}/userBoard")
     public ResponseEntity<Board> userBoard(@PathVariable Long memberId,@PathVariable Long boardId) {
-        Board board = boardService.userBoard(memberId, boardId);
-        return ResponseEntity.ok(board);
+        return ResponseEntity.ok(boardService.userBoard(memberId, boardId));
     }
 
 //    모든 게시물 목록
@@ -72,7 +65,7 @@ public class BoardController {
 
 //    게시물 삭제
     @DeleteMapping("/boards/{memberId}/{boardId}")
-    public Board deleteBoard(@PathVariable Long memberId ,@PathVariable Long boardId) {
-        return boardService.deleteBoard(memberId, boardId);
+    public ResponseEntity<Board> deleteBoard(@PathVariable Long memberId ,@PathVariable Long boardId) {
+        return ResponseEntity.ok(boardService.deleteBoard(memberId, boardId));
     }
 }
