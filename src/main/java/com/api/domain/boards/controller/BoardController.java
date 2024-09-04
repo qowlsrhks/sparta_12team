@@ -19,25 +19,26 @@ public class BoardController {
     private final BoardService boardService;
 
 //    게시물 생성
-    @PostMapping("/{memberId}")
-    public ResponseEntity<Board> create(@PathVariable Long memberId, @RequestBody BoardDto boardDto) {
-        return ResponseEntity.ok( boardService.create(memberId,boardDto));
+    @PostMapping
+    public ResponseEntity<Board> create(@RequestBody BoardDto boardDto) {
+        return ResponseEntity.ok( boardService.create(boardDto));
     }
 
-//    뉴스피드 목록
-    @GetMapping("/{memberId}/friendBoardList")
-    public ResponseEntity<Page<Board>> getFriendBoardList(@PathVariable Long memberId,@RequestParam int page) {
-        return ResponseEntity.ok(boardService.getFriendBoardList(memberId, page));
-    }
+//    (미구현 기능)
+////    뉴스피드 목록
+//    @GetMapping("/{memberId}/friendBoardList")
+//    public ResponseEntity<Page<Board>> getFriendBoardList(@PathVariable Long memberId,@RequestParam int page) {
+//        return ResponseEntity.ok(boardService.getFriendBoardList(memberId, page));
+//    }
+//
+////    뉴스피드 조회
+//    @GetMapping("/{memberId}/{boardId}friendBoard")
+//    public ResponseEntity<Page<Board>> getFriendBoard(@PathVariable Long memberId, @PathVariable Long boardId, @RequestParam int page) {
+//        return ResponseEntity.ok(boardService.getFriendBoard(memberId, page));
+//    }
 
-//    뉴스피드 조회
-    @GetMapping("/{memberId}/{boardId}friendBoard")
-    public ResponseEntity<Page<Board>> getFriendBoard(@PathVariable Long memberId, @PathVariable Long boardId, @RequestParam int page) {
-        return ResponseEntity.ok(boardService.getFriendBoard(memberId, page));
-    }
 
-
-//    특정 유저가 생성한 게시물 다건 조회
+//    특정 유저가 작성한 게시물 다건 조회
     @GetMapping("/{memberId}/userBoardList")
     public ResponseEntity<List<Board>> userBoardList(@PathVariable Long memberId) {
         return ResponseEntity.ok(boardService.findBoardsByUserId(memberId));
@@ -59,13 +60,13 @@ public class BoardController {
 //    게시물 수정
     @PutMapping("/{memberId}/{boardId}")
     public ResponseEntity<Board> update(@PathVariable Long memberId, @PathVariable Long boardId, @RequestBody BoardDto boardDto) {
-        Board board = boardService.update(memberId, boardId, boardDto);
+        Board board = boardService.update(boardId, boardDto);
         return ResponseEntity.ok(board);
     }
 
 //    게시물 삭제
     @DeleteMapping("/{memberId}/{boardId}")
-    public ResponseEntity<Board> delete(@PathVariable Long memberId , @PathVariable Long boardId) {
-        return ResponseEntity.ok(boardService.delete(memberId, boardId));
+    public ResponseEntity<String> delete(@PathVariable Long memberId , @PathVariable Long boardId) {
+        return ResponseEntity.ok(boardService.delete(boardId));
     }
 }

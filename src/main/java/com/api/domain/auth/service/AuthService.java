@@ -67,6 +67,8 @@ public class AuthService {
         return new UserResponseDto(savedUser);
     }
 
+
+
     //로그인
     public String login(LoginRequestDto requestDto) {
         User requestedUser = userRepository.findByEmail(requestDto.getEmail()).orElseThrow();
@@ -78,5 +80,19 @@ public class AuthService {
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return "로그인 성공";
+    }
+
+    //요청한 사용자가 작성자인지 판단
+    public boolean isUserOwner(User user) {
+        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        String ownersEmail = user.getEmail();
+        return currentUserEmail.equals(ownersEmail);
+    }
+
+    public User currentUser() {
+        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userRepository.findByEmail(currentUserEmail).orElseThrow(
+                () -> new NullPointerException("현재 로그인한 이메일로 사용자를 찾을 수 없습니다.")
+        );
     }
 }
