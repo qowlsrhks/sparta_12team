@@ -3,7 +3,6 @@ package com.api.domain.like.controller;
 import com.api.domain.boards.dto.BoardResponseDto;
 import com.api.domain.like.service.LikeService;
 import com.api.domain.users.dto.UserResponseDto;
-import com.api.domain.users.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +14,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LikeController {
     private final LikeService likeService;
-    private final UserService userService;
 
     @PostMapping
     public void liked(@RequestParam Long boardId) {

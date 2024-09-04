@@ -1,6 +1,5 @@
 package com.api.domain.like.service;
 
-import com.api.domain.boards.dto.BoardRequestDto;
 import com.api.domain.boards.dto.BoardResponseDto;
 import com.api.domain.boards.entity.Board;
 import com.api.domain.boards.repository.BoardRepository;

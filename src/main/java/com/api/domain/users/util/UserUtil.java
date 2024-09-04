@@ -17,10 +17,8 @@ public class UserUtil {
     private final UserRedisRepository userRedisRepository;
 
     public User findByUserId(Long UserId){
-        User user = userRepository.findById(UserId).orElseThrow(() ->
+        return userRepository.findById(UserId).orElseThrow(() ->
                 new NullPointerException("회원이 존재하지 않습니다."));
-
-        return user;
     }
 
     public boolean PasswordPattern(String password){
