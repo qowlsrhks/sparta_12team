@@ -11,7 +11,7 @@ public class LoginResponseDto {
     private final String message = "로그인 성공";
 
     public LoginResponseDto(User user) {
-        this.userId = user.getUserId();
+        this.userId = user.getId();
         this.username = user.getUsername();
         this.email = user.getEmail();
     }

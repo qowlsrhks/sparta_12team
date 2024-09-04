@@ -1,5 +1,6 @@
 package com.api.domain.like.controller;
 
+import com.api.domain.boards.dto.BoardResponseDto;
 import com.api.domain.like.service.LikeService;
 import com.api.domain.users.dto.UserResponseDto;
 import com.api.domain.users.service.UserService;
@@ -29,5 +30,10 @@ public class LikeController {
     @GetMapping("/who-liked")
     public ResponseEntity<List<UserResponseDto>> whoLiked(@RequestParam  Long boardId) {
         return ResponseEntity.ok(likeService.whoLiked(boardId));
+    }
+
+    @GetMapping("/what-liked")
+    public ResponseEntity<List<BoardResponseDto>> whatLiked(@RequestParam Long userId) {
+        return ResponseEntity.ok(likeService.whatLiked(userId));
     }
 }

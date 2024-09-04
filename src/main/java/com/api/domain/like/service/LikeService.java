@@ -1,5 +1,7 @@
 package com.api.domain.like.service;
 
+import com.api.domain.boards.dto.BoardRequestDto;
+import com.api.domain.boards.dto.BoardResponseDto;
 import com.api.domain.boards.entity.Board;
 import com.api.domain.boards.repository.BoardRepository;
 import com.api.domain.like.entity.Like;
@@ -66,5 +68,17 @@ public class LikeService {
         }
 
         return likedUsers.stream().map(UserResponseDto::new).toList();
+    }
+
+    //해당 유저의 좋아요 목록을 조회
+    public List<BoardResponseDto> whatLiked (Long userId) {
+        List<Like> likes = likeRepository.findByUserId(userId);
+
+        List<Board> likedBoard = new ArrayList<>();
+        for(Like like : likes) {
+            likedBoard.add(like.getBoard());
+        }
+
+        return likedBoard.stream().map(BoardResponseDto::new).toList();
     }
 }

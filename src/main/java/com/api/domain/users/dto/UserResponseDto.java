@@ -13,7 +13,7 @@ public class UserResponseDto {
      private String introduce;
 
      public UserResponseDto(User user){
-         this.userId = user.getUserId();
+         this.userId = user.getId();
          this.username = user.getUsername();
          this.email = user.getEmail();
          this.introduce = user.getIntroduce();
