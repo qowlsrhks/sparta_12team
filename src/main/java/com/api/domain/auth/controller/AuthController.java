@@ -6,8 +6,6 @@ import com.api.domain.auth.service.AuthService;
 import com.api.domain.config.JwtUtil;
 import com.api.domain.users.dto.UserCreateRequestDto;
 import com.api.domain.users.dto.UserResponseDto;
-import com.api.domain.users.repository.UserRepository;
-import com.api.domain.users.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
