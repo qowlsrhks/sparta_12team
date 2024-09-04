@@ -18,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +31,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     // 회원 가입
+    @Transactional
     public UserResponseDto createUser(UserCreateRequestDto requestDto) {
 //        //입력 Body 유효성 검사
 //        validateRequest(requestDto);
@@ -80,6 +82,7 @@ public class AuthService {
 
 
     //로그인
+    @Transactional
     public LoginResponseDto login(LoginRequestDto requestDto) {
         User requestedUser = userRepository.findByEmail(requestDto.getEmail()).orElseThrow();
         if(!requestedUser.isMember()) {

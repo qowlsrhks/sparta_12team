@@ -1,5 +1,6 @@
 package com.api.domain.users.service;
 
+import com.api.domain.auth.service.AuthService;
 import com.api.domain.users.dto.*;
 import com.api.domain.users.entity.DeleteUser;
 import com.api.domain.users.entity.User;
@@ -27,8 +28,10 @@ public class UserService {
     private final DeleteUserRepository deleteUserRepository;
     private final UserUtil userUtil;
     private final PasswordEncoder passwordEncoder;
+    private final AuthService authService;
 
     // 모든 회원 조회
+    @Transactional
     public List<UserResponseDto> getUsers() {
         // 활성 회원만 조회
         List<User> users = userRepository.findAllByisMemberIs(true);
@@ -42,7 +45,8 @@ public class UserService {
     }
 
     // 선택한 회원 조회
-    public UserResponseDto getUser(Long userId){
+    @Transactional
+    public UserResponseDto findById(Long userId){
         User user = userUtil.findByUserId(userId);
 
         if(!user.isMember()){
@@ -54,9 +58,13 @@ public class UserService {
 
     // 회원 정보 수정(이름, 소개)
     @Transactional
-    public UserResponseDto updateUser(UserModifyRequestDto requestDto) {
+    public UserResponseDto update(UserModifyRequestDto requestDto) {
         User user = userRepository.findByEmail(requestDto.getEmail()).orElseThrow(() ->
                 new NullPointerException("회원이 존재하지 않습니다."));
+
+        if(!authService.isUserOwner(user)) {
+            throw new IllegalArgumentException("본인만 수정할 수 있습니다.");
+        }
 
         user.update(requestDto.getUsername(), requestDto.getIntroduce(), user.getPassword());
 
@@ -65,9 +73,12 @@ public class UserService {
 
     // 비밀번호 변경
     @Transactional
-    public void updateUser (Long userId, UserPasswordRequestDto requestDto) {
-
+    public void update(Long userId, UserPasswordRequestDto requestDto) {
         User user = userUtil.findByUserId(userId);
+
+        if(!authService.isUserOwner(user)) {
+            throw new IllegalArgumentException("본인만 수정할 수 있습니다.");
+        }
 
         String currentPassword = requestDto.getPassword();
         String newPassword = requestDto.getNewPassword();
@@ -95,14 +106,17 @@ public class UserService {
 
     // 회원 탈퇴(isMember : true -> false)
     @Transactional
-    public UserStatusResponseDto updateUser(UserWithdrawRequestDto requestDto) {
+    public UserStatusResponseDto update(UserWithdrawRequestDto requestDto) {
         User user = userUtil.findByUserId(requestDto.getUserId());
+        if(!authService.isUserOwner(user)) {
+            throw new IllegalArgumentException("본인만 탈퇴할 수 있습니다.");
+        }
 
         if(!user.isMember()){
             throw new DeactivatedUserException("이미 탈퇴한 회원입니다.");
         }
         // 비밀번호 일치 여부 확인
-        if(!user.getPassword().equals(requestDto.getPassword())){
+        if(!passwordEncoder.matches(requestDto.getPassword(),user.getPassword())){
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
