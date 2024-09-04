@@ -33,17 +33,17 @@ public class AuthService {
     // 회원 가입
     @Transactional
     public UserResponseDto createUser(UserCreateRequestDto requestDto) {
-//        //입력 Body 유효성 검사
-//        validateRequest(requestDto);
-//        //이메일 인증
-//        verifyEmail(requestDto);
+        //입력 Body 유효성 검사
+        validateRequest(requestDto);
+        //이메일 인증
+        verifyEmail(requestDto);
 
         User user = new User(requestDto);
         user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
         User savedUser = userRepository.save(user);
 
-//        // redis에서 제거
-//        userRedisRepository.delete(userUtil.checkEmail(requestDto.getEmail()));
+        // redis에서 제거
+        userRedisRepository.delete(userUtil.checkEmail(requestDto.getEmail()));
 
         return new UserResponseDto(savedUser);
     }

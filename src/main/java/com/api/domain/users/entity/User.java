@@ -15,7 +15,8 @@ import lombok.Setter;
 public class User extends Timestamped {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    @Column(name = "user_id")
+    private Long id;
 
     @Column(name = "username", nullable = false, length = 20)
     private String username;
