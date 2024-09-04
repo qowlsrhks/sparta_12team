@@ -1,6 +1,7 @@
 package com.api.domain.auth.controller;
 
 import com.api.domain.auth.dto.LoginRequestDto;
+import com.api.domain.auth.dto.LoginResponseDto;
 import com.api.domain.auth.service.AuthService;
 import com.api.domain.config.JwtUtil;
 import com.api.domain.users.dto.UserCreateRequestDto;
@@ -19,34 +20,27 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
 public class AuthController {
-    private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
-    private final UserService userService;
     private final AuthService authService;
 
     // 회원 가입
     @PostMapping("/register")
-    public ResponseEntity<?> create(@RequestBody UserCreateRequestDto requestDto, HttpServletResponse response) {
-
+    public ResponseEntity<UserResponseDto> create(@RequestBody UserCreateRequestDto requestDto, HttpServletResponse response) {
         UserResponseDto responseDto = authService.createUser(requestDto);
-
         if(responseDto != null) {
             String token = jwtUtil.createToken(responseDto.getEmail());
             jwtUtil.addJwtToHeader(token, response);
         }
-
         return ResponseEntity.ok(responseDto);
     }
 
     //로그인
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequestDto requestDto, HttpServletResponse response) {
-        String answer = authService.login(requestDto);
-
+    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto requestDto, HttpServletResponse response) {
+        LoginResponseDto responseDto = authService.login(requestDto);
         String token = jwtUtil.createToken(requestDto.getEmail());
         jwtUtil.addJwtToHeader(token,response);
-
-        return ResponseEntity.ok(answer);
+        return ResponseEntity.ok(responseDto);
     }
 }
 

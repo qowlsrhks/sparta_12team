@@ -1,5 +1,6 @@
 package com.api.domain.users.controller;
 
+import com.api.domain.auth.service.AuthService;
 import com.api.domain.users.dto.*;
 import com.api.domain.users.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final AuthService authService;
 
     // 모든 회원 조회
     @GetMapping
@@ -43,5 +45,10 @@ public class UserController {
     @PatchMapping
     public ResponseEntity<UserStatusResponseDto> withdrawUser(@RequestBody UserWithdrawRequestDto requestDto){
         return ResponseEntity.ok(userService.updateUser(requestDto));
+    }
+
+    @GetMapping("/whoAmI")
+    public ResponseEntity<String> WhoAmI() {
+        return ResponseEntity.ok(authService.currentUser().getEmail());
     }
 }

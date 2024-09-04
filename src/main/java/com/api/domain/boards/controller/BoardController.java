@@ -1,10 +1,10 @@
 package com.api.domain.boards.controller;
 
-import com.api.domain.boards.dto.BoardDto;
+import com.api.domain.boards.dto.BoardRequestDto;
+import com.api.domain.boards.dto.BoardResponseDto;
 import com.api.domain.boards.entity.Board;
 import com.api.domain.boards.service.BoardService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +20,8 @@ public class BoardController {
 
 //    게시물 생성
     @PostMapping
-    public ResponseEntity<Board> create(@RequestBody BoardDto boardDto) {
-        return ResponseEntity.ok( boardService.create(boardDto));
+    public ResponseEntity<BoardResponseDto> create(@RequestBody BoardRequestDto boardRequestDto) {
+        return ResponseEntity.ok( boardService.create(boardRequestDto));
     }
 
 //    (미구현 기능)
@@ -44,7 +44,7 @@ public class BoardController {
         return ResponseEntity.ok(boardService.findBoardsByUserId(memberId));
     }
 
-//    단건 조회
+//    특정 유저가 작성한 게시물 단건 조회
     @GetMapping("/{memberId}/{boardId}/userBoard")
     public ResponseEntity<Board> findById(@PathVariable Long memberId, @PathVariable Long boardId) {
         return ResponseEntity.ok(boardService.findByUserIdAndBoardId(memberId, boardId));
@@ -58,15 +58,15 @@ public class BoardController {
 
 
 //    게시물 수정
-    @PutMapping("/{memberId}/{boardId}")
-    public ResponseEntity<Board> update(@PathVariable Long memberId, @PathVariable Long boardId, @RequestBody BoardDto boardDto) {
-        Board board = boardService.update(boardId, boardDto);
+    @PutMapping("/{boardId}")
+    public ResponseEntity<Board> update(@PathVariable Long boardId, @RequestBody BoardRequestDto boardRequestDto) {
+        Board board = boardService.update(boardId, boardRequestDto);
         return ResponseEntity.ok(board);
     }
 
 //    게시물 삭제
-    @DeleteMapping("/{memberId}/{boardId}")
-    public ResponseEntity<String> delete(@PathVariable Long memberId , @PathVariable Long boardId) {
+    @DeleteMapping("/{boardId}")
+    public ResponseEntity<String> delete(@PathVariable Long boardId) {
         return ResponseEntity.ok(boardService.delete(boardId));
     }
 }

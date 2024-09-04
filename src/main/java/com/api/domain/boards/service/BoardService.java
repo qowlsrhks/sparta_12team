@@ -2,7 +2,8 @@ package com.api.domain.boards.service;
 
 
 import com.api.domain.auth.service.AuthService;
-import com.api.domain.boards.dto.BoardDto;
+import com.api.domain.boards.dto.BoardRequestDto;
+import com.api.domain.boards.dto.BoardResponseDto;
 import com.api.domain.boards.entity.Board;
 import com.api.domain.boards.repository.BoardRepository;
 import com.api.domain.users.entity.User;
@@ -23,13 +24,13 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
     private final AuthService authService;
-    User currentUser = authService.currentUser();
 
     //게시글 생성
     @Transactional
-    public Board create(BoardDto boardDto) {
-        Board board = new Board(boardDto.getContents(), currentUser);
-        return boardRepository.save(board);
+    public BoardResponseDto create(BoardRequestDto boardRequestDto) {
+        Board board = new Board(boardRequestDto.getContents(), authService.currentUser());
+        Board savedBoard = boardRepository.save(board);
+        return new BoardResponseDto(savedBoard);
     }
 
 ////    뉴스피드 목록(미구현)
@@ -83,7 +84,7 @@ public class BoardService {
 
     //    게시글 수정
     @Transactional
-    public Board update(Long boardId, BoardDto boardDto) {
+    public Board update(Long boardId, BoardRequestDto boardRequestDto) {
         Board foundBoard = boardRepository.findById(boardId).orElseThrow(
                 ()->new NullPointerException("게시물을 찾을 수 없습니다.")
         );
@@ -93,7 +94,7 @@ public class BoardService {
             throw new AccessDeniedException("작성자만 수정할 수 있습니다.");
         }
 
-        foundBoard.setContents(boardDto.getContents());
+        foundBoard.setContents(boardRequestDto.getContents());
         return boardRepository.save(foundBoard);
     }
 
