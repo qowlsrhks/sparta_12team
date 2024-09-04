@@ -7,6 +7,7 @@ import com.api.domain.users.dto.UserResponseDto;
 import com.api.domain.users.entity.User;
 import com.api.domain.users.repository.UserRepository;
 import com.api.domain.users.service.UserService;
+import com.api.exceptions.DeactivatedUserException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -51,6 +52,11 @@ public class AuthService {
 
     //로그인
     public String login(LoginRequestDto requestDto) {
+        User requestedUser = userRepository.findByEmail(requestDto.getEmail()).orElseThrow();
+        if(!requestedUser.isMember()) {
+            throw new DeactivatedUserException("로그인 할 수 없는 사용자입니다.");
+        }
+
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(requestDto.getEmail(), requestDto.getPassword())
         );
