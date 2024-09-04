@@ -7,11 +7,13 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class UserResponseDto {
+    private Long userId;
      private String username;
      private String email;
      private String introduce;
 
      public UserResponseDto(User user){
+         this.userId = user.getUserId();
          this.username = user.getUsername();
          this.email = user.getEmail();
          this.introduce = user.getIntroduce();

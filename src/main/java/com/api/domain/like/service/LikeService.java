@@ -4,11 +4,15 @@ import com.api.domain.boards.entity.Board;
 import com.api.domain.boards.repository.BoardRepository;
 import com.api.domain.like.entity.Like;
 import com.api.domain.like.repository.LikeRepository;
+import com.api.domain.users.dto.UserResponseDto;
 import com.api.domain.users.entity.User;
 import com.api.domain.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -50,5 +54,17 @@ public class LikeService {
         foundBoard.setLikesCount(foundBoard.getLikesCount() - 1);
         boardRepository.save(foundBoard);
         likeRepository.delete(foundLike);
+    }
+
+    //해당 게시물에 좋아요 누른 유저 목록 조회
+    public List<UserResponseDto> whoLiked (Long boardId) {
+        List<Like> likes = likeRepository.findByBoardId(boardId);
+
+        List<User> likedUsers = new ArrayList<>();
+        for(Like like : likes) {
+            likedUsers.add(like.getUser());
+        }
+
+        return likedUsers.stream().map(UserResponseDto::new).toList();
     }
 }
