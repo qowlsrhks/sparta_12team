@@ -25,9 +25,9 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
 
-    //    게시글 생성
+    //게시글 생성
     @Transactional
-    public Board createBoard(Long userId, BoardDto boardDto) {
+    public Board create(Long userId, BoardDto boardDto) {
         User user = userRepository.findById(userId).orElseThrow(()
                 -> new RuntimeException("회원이 존재하지 않습니다."));
         Board board = new Board(boardDto.getContents(), user);
@@ -56,16 +56,18 @@ public class BoardService {
         }
     }
 
-    //유저 게시글 목록
-    public List<Board> userBoardList(Long userId) {
+    //특정 유저가 작성한 게시물 다건 조회
+    @Transactional
+    public List<Board> findBoardsByUserId(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("등록된 회원을 찾을 수 없습니다"));
 
         return boardRepository.findAllByUserId(user);
     }
 
-    //    유저 게시글 조회
-    public Board userBoard(Long userId, Long boardId) {
+    //   특정 유저의 게시물 단건 조회
+    @Transactional
+    public Board findByUserIdAndBoardId(Long userId, Long boardId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("등록된 회원을 찾을 수 없습니다"));
         Board board = boardRepository.findByUserIdAndBoardId(user, boardId)
@@ -79,14 +81,15 @@ public class BoardService {
 
     }
 
-    //    모든 게시글 목록
-    public List<Board> boardAllList() {
+    //    게시물 전체조회
+    @Transactional
+    public List<Board> findAll() {
         return boardRepository.findAll();
     }
 
     //    게시글 수정
     @Transactional
-    public Board updateBoard(Long userId, Long boardId, BoardDto boardDto) {
+    public Board update(Long userId, Long boardId, BoardDto boardDto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("등록된 회원을 찾을 수 없습니다"));
         Board board = boardRepository.findByUserIdAndBoardId(user, boardId)
@@ -102,7 +105,7 @@ public class BoardService {
 
     //    게시글 삭제
     @Transactional
-    public Board deleteBoard(Long userId,Long boardId) {
+    public Board delete(Long userId, Long boardId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("등록된 회원을 찾을 수 없습니다"));
         Board board = boardRepository.findByUserIdAndBoardId(user, boardId)

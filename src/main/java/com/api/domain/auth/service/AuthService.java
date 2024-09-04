@@ -73,13 +73,10 @@ public class AuthService {
         if(!requestedUser.isMember()) {
             throw new DeactivatedUserException("로그인 할 수 없는 사용자입니다.");
         }
-
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(requestDto.getEmail(), requestDto.getPassword())
         );
-
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
         return "로그인 성공";
     }
 }
