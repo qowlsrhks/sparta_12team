@@ -6,8 +6,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
-
 
 @Entity
 @Getter
@@ -17,9 +15,11 @@ public class Board extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long boardId;
+    @Column(name = "board_id")
+    private Long id;
 
     private String contents;
+    private Long likesCount = 0L;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
