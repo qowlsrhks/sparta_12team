@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 public class Board extends Timestamped {
 
@@ -23,14 +24,10 @@ public class Board extends Timestamped {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @JsonBackReference
-    private User userId;
+    private User user;
 
-    private LocalDateTime createdAt;
-
-
-    public Board(String contents, User userId) {
+    public Board(String contents, User user) {
         this.contents = contents;
-        this.userId = userId;
-        this.createdAt = LocalDateTime.now();
+        this.user = user;
     }
 }
