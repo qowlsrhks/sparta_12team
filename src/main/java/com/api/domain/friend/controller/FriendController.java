@@ -1,15 +1,15 @@
 package com.api.domain.friend.controller;
 
-import com.api.domain.friend.dto.UserResponseDto;
+import com.api.domain.friend.dto.FriendRequestDto;
+import com.api.domain.friend.dto.FriendResponseDto;
 import com.api.domain.friend.service.FriendService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
-@RequestMapping("/api")
+@RestController
+@RequestMapping("/api/users")
 public class FriendController {
 
     private final FriendService friendService;
@@ -18,58 +18,39 @@ public class FriendController {
         this.friendService = friendService;
     }
 
-    @PostMapping("/user/add-friend")
-    @ResponseBody
-    public ResponseEntity<String> addFriend(@RequestParam Long userId, @RequestParam Long friendId, @RequestParam String username, @RequestParam String friendUsername) {
-        try {
-            friendService.addFriend(userId, friendId, username, friendUsername);
-            return ResponseEntity.ok("친구 추가 완료되었습니다.");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    // 테스트 용도
+    @PostMapping("/add-friend")
+    public ResponseEntity<String> addFriend(@RequestBody FriendRequestDto requestDto) {
+        friendService.addFriend(requestDto);
+        return ResponseEntity.ok("친구 추가 완료되었습니다.");
     }
 
-    @PostMapping("/user/request-friend")
-    @ResponseBody
-    public ResponseEntity<String> requestFriend(@RequestParam Long userId, @RequestParam Long friendId, @RequestParam String username, @RequestParam String friendUsername) {
-        try {
-            friendService.requestFriend(userId, friendId, username, friendUsername);
-            return ResponseEntity.ok("친구 추가 요청했습니다.");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    @PostMapping("/request-friend")
+    public ResponseEntity<String> requestFriend(@RequestBody FriendRequestDto requestDto) {
+        friendService.requestFriend(requestDto);
+        return ResponseEntity.ok("친구 추가 요청했습니다.");
     }
 
-    @PostMapping("/user/accept-friend-request")
-    @ResponseBody
-    public ResponseEntity<String> acceptFriendRequest(@RequestParam Long userId, @RequestParam Long friendId, @RequestParam String username, @RequestParam String friendUsername) {
-        try {
-            friendService.acceptFriendRequest(userId, friendId, username, friendUsername);
-            return ResponseEntity.ok("친구 추가를 허락하셨습니다.");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    @PostMapping("/accept-friend-request")
+    public ResponseEntity<String> acceptFriendRequest(@RequestBody FriendRequestDto requestDto) {
+        friendService.acceptFriendRequest(requestDto);
+        return ResponseEntity.ok("친구요청을 허락하셨습니다.");
     }
 
-    @PostMapping("/user/remove-friend")
-    @ResponseBody
-    public ResponseEntity<String> removeFriend(@RequestParam Long userId, @RequestParam Long friendId, @RequestParam String username, @RequestParam String friendUsername) {
-        try {
-            friendService.removeFriend(userId, friendId, username, friendUsername);
-            return ResponseEntity.ok("친구 삭제가 완료되었습니다.");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    @PostMapping("/refuse-friend-request")
+    public ResponseEntity<String> refuseFriendRequest(@RequestBody FriendRequestDto requestDto) {
+        friendService.refuseFriendRequest(requestDto);
+        return ResponseEntity.ok("친구요청을 거절하셨습니다.");
     }
 
-    @GetMapping("/user/friends")
-    @ResponseBody
-    public ResponseEntity<List<UserResponseDto>> getFriends(@RequestParam Long userId) {
-        try {
-            List<UserResponseDto> friends = friendService.getFriends(userId);
-            return ResponseEntity.ok(friends);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(null);
-        }
+    @PostMapping("/remove-friend")
+    public ResponseEntity<String> removeFriend(@RequestBody FriendRequestDto requestDto) {
+        friendService.removeFriend(requestDto);
+        return ResponseEntity.ok("친구 삭제가 완료되었습니다.");
+    }
+
+    @GetMapping("/friends")
+    public ResponseEntity<List<FriendResponseDto>> getFriends(@RequestParam Long userId) {
+        return ResponseEntity.ok(friendService.getFriends(userId));
     }
 }

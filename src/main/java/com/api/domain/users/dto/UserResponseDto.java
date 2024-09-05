@@ -11,11 +11,13 @@ public class UserResponseDto {
      private String username;
      private String email;
      private String introduce;
+     private int friendNumber;
 
      public UserResponseDto(User user){
          this.userId = user.getId();
          this.username = user.getUsername();
          this.email = user.getEmail();
          this.introduce = user.getIntroduce();
+         this.friendNumber = user.getFriends().size();
      }
 }

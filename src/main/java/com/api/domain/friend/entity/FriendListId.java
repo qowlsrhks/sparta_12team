@@ -1,10 +1,11 @@
 package com.api.domain.friend.entity;
 
-import java.io.Serializable;
-import java.util.Objects;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.io.Serializable;
+import java.util.Objects;
 
 @Getter
 @Setter
