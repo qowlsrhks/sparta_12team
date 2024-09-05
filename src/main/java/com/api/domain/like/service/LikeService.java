@@ -11,6 +11,7 @@ import com.api.domain.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ public class LikeService {
     private final LikeRepository likeRepository;
 
     //좋아요 추가
+    @Transactional
     public void liked(Long boardId) {
         String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         System.out.println(currentUserEmail);
@@ -44,6 +46,7 @@ public class LikeService {
         boardRepository.save(foundBoard);
     }
 
+    @Transactional
     //좋아요 취소
     public void cancelLike(Long boardId) {
         String currentEmail = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -57,6 +60,7 @@ public class LikeService {
         likeRepository.delete(foundLike);
     }
 
+    @Transactional
     //해당 게시물에 좋아요 누른 유저 목록 조회
     public List<UserResponseDto> whoLiked (Long boardId) {
         List<Like> likes = likeRepository.findByBoardId(boardId);
@@ -69,6 +73,7 @@ public class LikeService {
         return likedUsers.stream().map(UserResponseDto::new).toList();
     }
 
+    @Transactional
     //해당 유저의 좋아요 목록을 조회
     public List<BoardResponseDto> whatLiked (Long userId) {
         List<Like> likes = likeRepository.findByUserId(userId);
