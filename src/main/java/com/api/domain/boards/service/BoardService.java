@@ -1,6 +1,8 @@
 package com.api.domain.boards.service;
 
 
+import com.api.domain.boards.entity.BoardImage;
+import com.api.domain.boards.repository.BoardImageRepository;
 import com.api.domain.boards.repository.BoardRepository;
 import com.api.domain.boards.dto.BoardDto;
 import com.api.domain.boards.entity.Board;
@@ -14,8 +16,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -24,15 +30,37 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
+    private final BoardImageRepository boardImageRepository;
 
 
     //    게시글 생성
     @Transactional
-    public BoardDto createBoard(Long userId, BoardDto boardDto) {
+    public BoardDto createBoard(Long userId, String contents, MultipartFile file) {
         User user = userRepository.findById(userId).orElseThrow(()
                 -> new RuntimeException("회원이 존재하지 않습니다."));
-        Board board = new Board(boardDto.getContents(), user);
-        return new BoardDto(boardRepository.save(board));
+        Board board = new Board(contents, user);
+        BoardDto boardDto = null;
+
+        if(file != null){
+                UUID uuid = UUID.randomUUID();
+                String imageFileName = uuid + "_" + file.getOriginalFilename();
+                File destinationFile = new File("C:\\Users\\skswl\\OneDrive\\デスクトップ\\temprojectPhoto" + imageFileName);
+
+                try {
+                    file.transferTo(destinationFile);
+                }catch (IOException e){
+                    throw new RuntimeException(e);
+                }
+                BoardImage image = BoardImage.builder()
+                        .url("C:\\Users\\skswl\\OneDrive\\デスクトップ\\temprojectPhoto" + imageFileName)
+                        .board(board)
+                        .build();
+                boardImageRepository.save(image);
+                boardDto = new BoardDto(boardRepository.save(board));
+                boardDto.changeImageUrl(image.getUrl());
+        }
+
+        return boardDto;
     }
 
     //    뉴스피드 목록
@@ -94,6 +122,7 @@ public class BoardService {
             throw new RuntimeException("You are not authorized to delete this board");
         }
     }
+
 
 
 }
