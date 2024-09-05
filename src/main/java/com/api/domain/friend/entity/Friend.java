@@ -1,7 +1,6 @@
 package com.api.domain.friend.entity;
 
 import com.api.domain.users.entity.User;
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -76,7 +76,9 @@ public class CommentService {
         Comment comment = findById(commentId);
 
         //작성자와 요청자가 같은지 확인
-        User foundUser = userRepository.findByUsername(comment.getUsername());
+        User foundUser = userRepository.findByUsername(comment.getUsername()).orElseThrow(() ->
+                new IllegalArgumentException("작성자를 찾을 수 없습니다."));
+
         if (!authService.isUserOwner(foundUser)) {
             throw new AccessDeniedException("작성자만 삭제할 수 있습니다.");
         }
