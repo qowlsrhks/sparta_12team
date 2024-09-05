@@ -5,11 +5,11 @@ import lombok.Getter;
 @Getter
 public class CommentResponseDto {
 
-    private final Long id;
+    private final Long boardId;
     private final String contents;
 
-    public CommentResponseDto(Long id, String contents) {
-        this.id = id;
+    public CommentResponseDto(Long boardId, String contents) {
+        this.boardId = boardId;
         this.contents = contents;
     }
 }

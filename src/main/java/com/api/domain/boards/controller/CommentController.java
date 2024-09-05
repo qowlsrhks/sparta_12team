@@ -41,27 +41,27 @@ public class CommentController {
 //    }
 
     @PostMapping("/boards/{boardId}/comments")
-    public CommentSaveResponseDto saveComment(@PathVariable Long boardId, @RequestBody CommentSaveRequestDto commentSaveRequestDto) {
-        return commentService.saveComment(boardId, commentSaveRequestDto);
+    public ResponseEntity<CommentSaveResponseDto> saveComment(@PathVariable Long boardId, @RequestBody CommentSaveRequestDto commentSaveRequestDto) {
+        return ResponseEntity.ok(commentService.saveComment(boardId, commentSaveRequestDto));
     }
 
     // 전체 조회
     @GetMapping("/boards/{boardId}/comments")
-    public List<CommentDetailResponseDto> getComments (@PathVariable Long boardId) {
-        return commentService.getComments(boardId);
+    public ResponseEntity<List<CommentDetailResponseDto>> getComments (@PathVariable Long boardId) {
+        return ResponseEntity.ok(commentService.getComments(boardId));
     }
 
     // 단건 조회
     @GetMapping("/boards/comments/{commentId}")
-    public CommentDetailResponseDto getComment (@PathVariable Long commentId) {
-        return commentService.getComment(commentId);
+    public ResponseEntity<CommentDetailResponseDto> getComment (@PathVariable Long commentId) {
+        return ResponseEntity.ok(commentService.getComment(commentId));
     }
 
     // 수정
     @PutMapping("/boards/comments/{commentId}")
-    public CommentUpdateResponseDto updateComment(@PathVariable Long commentId,
+    public ResponseEntity<CommentUpdateResponseDto> updateComment(@PathVariable Long commentId,
                                                   @RequestBody CommentUpdateRequestDto commentUpdateRequestDto) {
-        return commentService.updateComment(commentId, commentUpdateRequestDto);
+        return ResponseEntity.ok(commentService.updateComment(commentId, commentUpdateRequestDto));
     }
 
     // 삭제

@@ -38,7 +38,7 @@ public class CommentService {
     }
 
     public List<CommentDetailResponseDto> getComments(Long boardId) {
-        List<Comment> commentList = commentRepository.findByBoardId(boardId);
+        List<Comment> commentList = commentRepository.findByBoardBoardId(boardId);
 
         List<CommentDetailResponseDto> dtoList = new ArrayList<>();
 

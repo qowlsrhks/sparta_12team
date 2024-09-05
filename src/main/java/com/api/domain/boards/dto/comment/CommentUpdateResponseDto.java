@@ -7,12 +7,12 @@ import java.time.LocalDateTime;
 @Getter
 public class CommentUpdateResponseDto {
 
-    private final Long id;
+    private final Long boardId;
     private final String contents;
 
 
-    public CommentUpdateResponseDto(Long id, String contents) {
-        this.id = id;
+    public CommentUpdateResponseDto(Long boardId, String contents) {
+        this.boardId = boardId;
         this.contents = contents;
     }
 }
