@@ -1,12 +1,12 @@
 package com.api.domain.friend.controller;
 
+import com.api.domain.friend.dto.UserResponseDto;
 import com.api.domain.friend.service.FriendService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/api")
@@ -62,4 +62,14 @@ public class FriendController {
         }
     }
 
+    @GetMapping("/user/friends")
+    @ResponseBody
+    public ResponseEntity<List<UserResponseDto>> getFriends(@RequestParam Long userId) {
+        try {
+            List<UserResponseDto> friends = friendService.getFriends(userId);
+            return ResponseEntity.ok(friends);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
 }

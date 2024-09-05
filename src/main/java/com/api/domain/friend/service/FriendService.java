@@ -2,11 +2,15 @@ package com.api.domain.friend.service;
 
 import com.api.domain.friend.entity.FriendList;
 import com.api.domain.friend.repository.FriendListRepository;
+import com.api.domain.friend.dto.UserResponseDto;
 import com.api.domain.users.entity.User;
 import com.api.domain.users.repository.UserRepository;
 import com.api.domain.users.util.UserUtil;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -20,6 +24,15 @@ public class FriendService {
         this.userRepository = userRepository;
         this.friendListRepository = friendListRepository;
         this.userUtil = userUtil;
+    }
+
+    public List<UserResponseDto> getFriends(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found by userId"));
+
+        return user.getFriends().stream()
+                .map(friend -> new UserResponseDto(friend.getId(), friend.getUsername()))
+                .collect(Collectors.toList());
     }
 
     public void addFriend(Long userId, Long friendId, String username, String friendUsername) {
