@@ -30,6 +30,9 @@ public class Board extends Timestamped {
     @JsonBackReference
     private User user;
 
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BoardImage> boardImages = new ArrayList<>();
+
 
    @OneToMany(mappedBy = "board")
    private List<Comment> comments = new ArrayList<>();
@@ -37,5 +40,9 @@ public class Board extends Timestamped {
     public Board(String contents, User user) {
         this.contents = contents;
         this.user = user;
+    }
+
+    public void addBoardImage(BoardImage boardImage) {
+        this.boardImages.add(boardImage);
     }
 }

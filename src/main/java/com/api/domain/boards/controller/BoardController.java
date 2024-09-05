@@ -5,15 +5,18 @@ import com.api.domain.boards.dto.BoardResponseDto;
 import com.api.domain.boards.entity.Board;
 import com.api.domain.boards.service.BoardService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 @RequestMapping("/api/boards")
 public class BoardController {
 
@@ -21,8 +24,12 @@ public class BoardController {
 
 //    게시물 생성
     @PostMapping
-    public ResponseEntity<BoardResponseDto> create(@RequestBody BoardRequestDto boardRequestDto) {
-        return ResponseEntity.ok( boardService.create(boardRequestDto));
+    public ResponseEntity<BoardResponseDto> create(@RequestParam("contents") String contents, @RequestParam("file") MultipartFile file) {
+
+        log.info("contents {}", contents);
+        log.info("파일 이름: {}", file.getOriginalFilename());
+
+        return ResponseEntity.ok( boardService.create(contents, file));
     }
 
 
@@ -47,8 +54,8 @@ public class BoardController {
 
 //    모든 게시물 조회
     @GetMapping
-    public ResponseEntity<List<BoardResponseDto>> findAll(@RequestParam(required = false) Integer pageNum, Integer pageSize) {
-        return ResponseEntity.ok(boardService.findAll(pageNum, pageSize));
+    public ResponseEntity<List<BoardResponseDto>> findAll() {
+        return ResponseEntity.ok(boardService.findAll());
     }
 
 //    게시물 수정

@@ -1,5 +1,6 @@
 package com.api.domain.common;
 
+import com.api.exceptions.ImageUploadFailedException;
 import com.api.exceptions.VerifyEmailSentException;
 import jakarta.mail.MessagingException;
 import com.api.exceptions.DeactivatedUserException;
@@ -15,7 +16,7 @@ public class GlobalExceptionHandler {
 
     // 400
     @ExceptionHandler({IllegalArgumentException.class,
-            NullPointerException.class, DeactivatedUserException.class})
+            NullPointerException.class, DeactivatedUserException.class, ImageUploadFailedException.class})
     public ResponseEntity<String> BadRequestException(final RuntimeException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
