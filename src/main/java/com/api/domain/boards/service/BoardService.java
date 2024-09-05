@@ -44,7 +44,7 @@ public class BoardService {
         if(file != null){
                 UUID uuid = UUID.randomUUID();
                 String imageFileName = uuid + "_" + file.getOriginalFilename();
-                File destinationFile = new File("C:\\Users\\skswl\\OneDrive\\デスクトップ\\temprojectPhoto" + imageFileName);
+                File destinationFile = new File("C:\\Users\\zkdlt\\OneDrive\\Desktop\\sparta_12team\\photos" + imageFileName);
 
                 try {
                     file.transferTo(destinationFile);
@@ -52,7 +52,7 @@ public class BoardService {
                     throw new RuntimeException(e);
                 }
                 BoardImage image = BoardImage.builder()
-                        .url("C:\\Users\\skswl\\OneDrive\\デスクトップ\\temprojectPhoto" + imageFileName)
+                        .url("C:\\Users\\zkdlt\\OneDrive\\Desktop\\sparta_12team\\photos" + imageFileName)
                         .board(board)
                         .build();
                 boardImageRepository.save(image);
