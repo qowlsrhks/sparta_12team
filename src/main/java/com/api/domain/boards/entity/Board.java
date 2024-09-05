@@ -1,10 +1,14 @@
 package com.api.domain.boards.entity;
 
+import com.api.domain.comment.entity.Comment;
 import com.api.domain.common.Timestamped;
 import com.api.domain.users.entity.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -25,6 +29,10 @@ public class Board extends Timestamped {
     @JoinColumn(name = "user_id")
     @JsonBackReference
     private User user;
+
+
+   @OneToMany(mappedBy = "board")
+   private List<Comment> comments = new ArrayList<>();
 
     public Board(String contents, User user) {
         this.contents = contents;
