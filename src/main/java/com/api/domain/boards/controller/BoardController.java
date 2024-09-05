@@ -25,23 +25,17 @@ public class BoardController {
         return ResponseEntity.ok( boardService.create(boardRequestDto));
     }
 
-//    (미구현 기능)
-////    뉴스피드 목록
-//    @GetMapping("/{memberId}/friendBoardList")
-//    public ResponseEntity<Page<Board>> getFriendBoardList(@PathVariable Long memberId,@RequestParam int page) {
-//        return ResponseEntity.ok(boardService.getFriendBoardList(memberId, page));
-//    }
-//
-////    뉴스피드 조회
-//    @GetMapping("/{memberId}/{boardId}friendBoard")
-//    public ResponseEntity<Page<Board>> getFriendBoard(@PathVariable Long memberId, @PathVariable Long boardId, @RequestParam int page) {
-//        return ResponseEntity.ok(boardService.getFriendBoard(memberId, page));
-//    }
+
+//    뉴스피드 조회
+    @GetMapping("/newsfeed")
+    public ResponseEntity<Page<BoardResponseDto>> getFriendBoard(Integer pageNum) {
+        return ResponseEntity.ok(boardService.newsfeed(pageNum));
+    }
 
 
 //    특정 유저가 작성한 게시물 다건 조회
     @GetMapping("/{memberId}")
-    public ResponseEntity<List<Board>> findByUserId(@PathVariable Long memberId) {
+    public ResponseEntity<Page<BoardResponseDto>> findByUserId(@PathVariable Long memberId) {
         return ResponseEntity.ok(boardService.findByUserId(memberId));
     }
 
@@ -53,7 +47,7 @@ public class BoardController {
 
 //    모든 게시물 조회
     @GetMapping
-    public ResponseEntity<Page<BoardResponseDto>> findAll(@RequestParam(required = false) Integer pageNum, Integer pageSize) {
+    public ResponseEntity<List<BoardResponseDto>> findAll(@RequestParam(required = false) Integer pageNum, Integer pageSize) {
         return ResponseEntity.ok(boardService.findAll(pageNum, pageSize));
     }
 

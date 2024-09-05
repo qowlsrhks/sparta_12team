@@ -1,5 +1,6 @@
 package com.api.domain.friend.controller;
 
+import com.api.domain.auth.service.AuthService;
 import com.api.domain.friend.dto.FriendRequestDto;
 import com.api.domain.friend.dto.FriendResponseDto;
 import com.api.domain.friend.service.FriendService;
@@ -13,9 +14,11 @@ import java.util.List;
 public class FriendController {
 
     private final FriendService friendService;
+    private final AuthService authService;
 
-    public FriendController(FriendService friendService) {
+    public FriendController(FriendService friendService, AuthService authService) {
         this.friendService = friendService;
+        this.authService = authService;
     }
 
     // 테스트 용도

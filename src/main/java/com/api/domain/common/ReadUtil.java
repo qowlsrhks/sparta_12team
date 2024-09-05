@@ -1,4 +1,4 @@
-package com.api.domain.users.util;
+package com.api.domain.common;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
@@ -11,10 +11,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class ReadUtil {
     public Pageable pageableSortedByModifiedAt (Integer page, Integer size) {
-        int PageNum = (page != null && page >= 0) ? page : 0;
-        int PageSize = (size != null && size > 0) ? size : 10;
+        int pageNum = (page != null && page >= 0) ? page : 0;
+        int pageSize = (size != null && size > 0) ? size : 10;
         Sort sort = Sort.by(Sort.Direction.DESC, "modifiedAt");
 
-        return PageRequest.of(PageNum,PageSize,sort);
+        return PageRequest.of(pageNum,pageSize,sort);
     }
 }

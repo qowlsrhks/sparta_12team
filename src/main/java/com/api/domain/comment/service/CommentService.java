@@ -10,7 +10,7 @@ import com.api.domain.comment.entity.Comment;
 import com.api.domain.comment.repository.CommentRepository;
 import com.api.domain.users.entity.User;
 import com.api.domain.users.repository.UserRepository;
-import com.api.domain.users.util.ReadUtil;
+import com.api.domain.common.ReadUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
