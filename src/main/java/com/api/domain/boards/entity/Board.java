@@ -1,5 +1,8 @@
 package com.api.domain.boards.entity;
 
+import com.api.domain.common.Timestamped;
+import com.api.domain.users.entity.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -7,26 +10,32 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Entity
-@Setter
 @Getter
-public class Board {
+@Setter
+@NoArgsConstructor
+public class Board extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long boardId;
+    @Column(name = "board_id")
+    private Long id;
 
     private String contents;
+    private Long likesCount = 0L;
 
-    private LocalDateTime createdDate;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @JsonBackReference
+    private User user;
 
-    private LocalDateTime modifiedDate;
-
-   @ManyToOne(fetch = FetchType.LAZY)
-   @JoinColumn(name = "member_id")
-    private Member memberId;
 
    @OneToMany(mappedBy = "board")
    private List<Comment> comments = new ArrayList<>();
 
+    public Board(String contents, User user) {
+        this.contents = contents;
+        this.user = user;
+    }
 }
