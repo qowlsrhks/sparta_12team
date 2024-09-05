@@ -18,6 +18,7 @@ public class Comment  extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String contents;
+    private Long userId;
     private String username;
 
     @ManyToOne(fetch = FetchType.LAZY)

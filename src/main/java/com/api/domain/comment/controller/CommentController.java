@@ -12,18 +12,18 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/api/boards")
+@RequestMapping("/api")
 public class CommentController {
 
     private final CommentService commentService;
 
-    @PostMapping("/{boardId}/comments")
+    @PostMapping("boards/{boardId}/comments")
     public ResponseEntity<CommentResponseDto> save(@PathVariable Long boardId, @RequestBody CommentSaveRequestDto commentSaveRequestDto) {
         return ResponseEntity.ok(commentService.save(boardId, commentSaveRequestDto));
     }
 
     // 전체 조회
-    @GetMapping("/{boardId}/comments")
+    @GetMapping("boards/{boardId}/comments")
     public ResponseEntity<Page<CommentResponseDto>> findAllByBoardId(@PathVariable Long boardId, @RequestParam(required = false) Integer pageNum, Integer pageSize) {
         return ResponseEntity.ok(commentService.findAllByBoardId(boardId, pageNum, pageSize));
     }

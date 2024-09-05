@@ -37,6 +37,7 @@ public class CommentService {
         Comment comment = new Comment(requestDto);
         comment.setBoard(board);
         comment.setUsername(authService.currentUser().getUsername());
+        comment.setUserId(authService.currentUser().getId());
         Comment savedComment = commentRepository.save(comment);
         return new CommentResponseDto(savedComment);
     }
@@ -59,12 +60,13 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NullPointerException("댓글을 찾을 수 없습니다."));
 
         //작성자와 요청자가 같은지 확인
-        User foundUser = userRepository.findByUsername(comment.getUsername());
+        User foundUser = userRepository.findById(comment.getUserId()).orElseThrow();
         if (!authService.isUserOwner(foundUser)) {
             throw new AccessDeniedException("작성자만 수정할 수 있습니다.");
         }
 
         comment.update(commentUpdateRequestDto.getContents());
+        commentRepository.save(comment);
         return new CommentResponseDto(comment);
     }
 

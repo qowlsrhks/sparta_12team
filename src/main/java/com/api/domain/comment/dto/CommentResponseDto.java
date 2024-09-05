@@ -10,6 +10,7 @@ public class CommentResponseDto {
 
     private final Long boardId;
     private final Long commentId;
+    private final Long userId;
     private final String username;
     private final String contents;
     private final LocalDateTime modifiedAt;
@@ -19,6 +20,7 @@ public class CommentResponseDto {
         this.contents = comment.getContents();
         this.username = comment.getUsername();
         this.commentId = comment.getId();
+        this.userId = comment.getUserId();
         this.modifiedAt = comment.getModifiedAt();
     }
 }
