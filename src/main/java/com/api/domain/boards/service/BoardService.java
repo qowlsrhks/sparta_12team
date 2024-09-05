@@ -4,11 +4,12 @@ import com.api.domain.auth.service.AuthService;
 import com.api.domain.boards.dto.BoardRequestDto;
 import com.api.domain.boards.dto.BoardResponseDto;
 import com.api.domain.boards.entity.Board;
+import com.api.domain.boards.entity.BoardImage;
+import com.api.domain.boards.repository.BoardImageRepository;
 import com.api.domain.boards.repository.BoardRepository;
-import com.api.domain.friend.repository.FriendListRepository;
-import com.api.domain.users.entity.User;
 import com.api.domain.common.ReadUtil;
-import com.api.domain.users.repository.UserRepository;
+import com.api.domain.users.entity.User;
+import com.api.exceptions.ImageUploadFailedException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -17,9 +18,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -29,13 +34,36 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final AuthService authService;
     private final ReadUtil readUtil;
-    private final FriendListRepository friendListRepository;
-    private final UserRepository userRepository;
+    private final BoardImageRepository boardImageRepository;
 
     //게시글 생성
     @Transactional
-    public BoardResponseDto create(BoardRequestDto boardRequestDto) {
-        Board board = new Board(boardRequestDto.getContents(), authService.currentUser());
+    public BoardResponseDto create(String contents, MultipartFile file) {
+        Board board = new Board(contents, authService.currentUser());
+
+        if(file != null){
+            UUID uuid = UUID.randomUUID();
+            String imagePath = System.getenv("image.path");
+            imagePath+=File.separator;
+            String imageFileName = uuid + "_" + file.getOriginalFilename();
+            File destinationFile = new File(imagePath + imageFileName);
+
+            try {
+                file.transferTo(destinationFile);
+            }catch (IOException e){
+                throw new ImageUploadFailedException("이미지 업로드에 실패했습니다.");
+            }
+            BoardImage image = BoardImage.builder()
+                    .url(imagePath + imageFileName)
+                    .board(board)
+                    .build();
+            boardImageRepository.save(image);
+            board.addBoardImage(image);
+            BoardResponseDto containImageResponseDto= new BoardResponseDto(boardRepository.save(board));
+            containImageResponseDto.setImageUrls(image.getUrl());
+            return containImageResponseDto;
+        }
+
         Board savedBoard = boardRepository.save(board);
         return new BoardResponseDto(savedBoard);
     }
@@ -83,8 +111,7 @@ public class BoardService {
 
     //게시물 전체조회
     @Transactional
-    public List<BoardResponseDto> findAll(Integer page, Integer size) {
-        Pageable sortedPageable = readUtil.pageableSortedByModifiedAt(page,size);
+    public List<BoardResponseDto> findAll() {
         return boardRepository.findAll().stream().map(BoardResponseDto::new).toList();
     }
 
