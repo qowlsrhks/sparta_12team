@@ -1,15 +1,17 @@
 package com.api.domain.boards.service;
 
-
 import com.api.domain.auth.service.AuthService;
 import com.api.domain.boards.dto.BoardRequestDto;
 import com.api.domain.boards.dto.BoardResponseDto;
 import com.api.domain.boards.entity.Board;
 import com.api.domain.boards.repository.BoardRepository;
-import com.api.domain.users.entity.User;
 import com.api.domain.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,27 +61,26 @@ public class BoardService {
 
     //특정 유저가 작성한 게시물 다건 조회
     @Transactional
-    public List<Board> findBoardsByUserId(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NullPointerException("등록된 회원을 찾을 수 없습니다"));
-
-        return boardRepository.findBoardsByUser(user);
+    public List<Board> findByUserId(Long userId) {
+        return boardRepository.findByUserId(userId);
     }
 
     //   특정 유저의 게시물 단건 조회
     @Transactional
     public Board findByUserIdAndBoardId(Long userId, Long boardId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("등록된 회원을 찾을 수 없습니다"));
-
-        return boardRepository.findByUserAndId(user, boardId)
-                .orElseThrow(() -> new RuntimeException("등록된 게시판을 찾을 수 없습니다"));
+        return boardRepository.findByUserIdAndId(userId, boardId)
+                .orElseThrow(() -> new RuntimeException("등록된 게시물을 찾을 수 없습니다"));
     }
 
-    //    게시물 전체조회
+    //게시물 전체조회
     @Transactional
-    public List<Board> findAll() {
-        return boardRepository.findAll();
+    public Page<BoardResponseDto> findAll(Integer page, Integer size) {
+        int PageNum = (page != null && page >= 0) ? page : 0;
+        int PageSize = (size != null && size > 0) ? size : 10;
+        Sort sort = Sort.by(Sort.Direction.DESC, "modifiedAt");
+
+        Pageable sortedPageable = PageRequest.of(PageNum,PageSize,sort);
+        return boardRepository.findAll(sortedPageable).map(BoardResponseDto::new);
     }
 
     //    게시글 수정

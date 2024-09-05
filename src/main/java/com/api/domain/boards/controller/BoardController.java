@@ -5,6 +5,7 @@ import com.api.domain.boards.dto.BoardResponseDto;
 import com.api.domain.boards.entity.Board;
 import com.api.domain.boards.service.BoardService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -39,23 +40,22 @@ public class BoardController {
 
 
 //    특정 유저가 작성한 게시물 다건 조회
-    @GetMapping("/{memberId}/userBoardList")
-    public ResponseEntity<List<Board>> userBoardList(@PathVariable Long memberId) {
-        return ResponseEntity.ok(boardService.findBoardsByUserId(memberId));
+    @GetMapping("/{memberId}")
+    public ResponseEntity<List<Board>> findByUserId(@PathVariable Long memberId) {
+        return ResponseEntity.ok(boardService.findByUserId(memberId));
     }
 
 //    특정 유저가 작성한 게시물 단건 조회
-    @GetMapping("/{memberId}/{boardId}/userBoard")
-    public ResponseEntity<Board> findById(@PathVariable Long memberId, @PathVariable Long boardId) {
+    @GetMapping("/{memberId}/{boardId}")
+    public ResponseEntity<Board> findByUserIdAndBoardId(@PathVariable Long memberId, @PathVariable Long boardId) {
         return ResponseEntity.ok(boardService.findByUserIdAndBoardId(memberId, boardId));
     }
 
 //    모든 게시물 조회
-    @GetMapping("/boardAllList")
-    public ResponseEntity<List<Board>> findAll() {
-        return ResponseEntity.ok(boardService.findAll());
+    @GetMapping
+    public ResponseEntity<Page<BoardResponseDto>> findAll(@RequestParam(required = false) Integer pageNum, Integer pageSize) {
+        return ResponseEntity.ok(boardService.findAll(pageNum, pageSize));
     }
-
 
 //    게시물 수정
     @PutMapping("/{boardId}")
