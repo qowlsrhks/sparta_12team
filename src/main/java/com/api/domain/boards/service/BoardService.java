@@ -5,13 +5,11 @@ import com.api.domain.boards.dto.BoardRequestDto;
 import com.api.domain.boards.dto.BoardResponseDto;
 import com.api.domain.boards.entity.Board;
 import com.api.domain.boards.repository.BoardRepository;
-import com.api.domain.users.repository.UserRepository;
+import com.api.domain.users.util.ReadUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,8 +22,8 @@ import java.util.List;
 public class BoardService {
 
     private final BoardRepository boardRepository;
-    private final UserRepository userRepository;
     private final AuthService authService;
+    private final ReadUtil readUtil;
 
     //게시글 생성
     @Transactional
@@ -75,11 +73,7 @@ public class BoardService {
     //게시물 전체조회
     @Transactional
     public Page<BoardResponseDto> findAll(Integer page, Integer size) {
-        int PageNum = (page != null && page >= 0) ? page : 0;
-        int PageSize = (size != null && size > 0) ? size : 10;
-        Sort sort = Sort.by(Sort.Direction.DESC, "modifiedAt");
-
-        Pageable sortedPageable = PageRequest.of(PageNum,PageSize,sort);
+        Pageable sortedPageable = readUtil.pageableSortedByModifiedAt(page,size);
         return boardRepository.findAll(sortedPageable).map(BoardResponseDto::new);
     }
 
