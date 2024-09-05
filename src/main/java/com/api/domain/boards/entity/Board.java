@@ -6,6 +6,10 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Entity
 @Getter
@@ -25,6 +29,10 @@ public class Board extends Timestamped {
     @JoinColumn(name = "user_id")
     @JsonBackReference
     private User user;
+
+
+   @OneToMany(mappedBy = "board")
+   private List<Comment> comments = new ArrayList<>();
 
     public Board(String contents, User user) {
         this.contents = contents;
