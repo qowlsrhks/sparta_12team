@@ -27,7 +27,6 @@ public class LikeService {
     @Transactional
     public void liked(Long boardId) {
         String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        System.out.println(currentUserEmail);
 
         if(likeRepository.findByUserEmailAndBoardId(currentUserEmail, boardId).isPresent()) {
             throw new IllegalArgumentException("이미 '좋아요'된 글입니다!");
@@ -51,7 +50,7 @@ public class LikeService {
     public void cancelLike(Long boardId) {
         String currentEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         Like foundLike = likeRepository.findByUserEmailAndBoardId(currentEmail, boardId).orElseThrow(
-                () -> new IllegalArgumentException("좋아요 된 적 없는 글입니다!")
+                () -> new IllegalArgumentException("해당 게시물은 좋아요 상태가 아닙니다!")
         );
 
         Board foundBoard = boardRepository.findById(boardId).orElseThrow();
