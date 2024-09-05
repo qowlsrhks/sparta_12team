@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
 
 
 @Entity
@@ -23,14 +22,17 @@ public class Board extends Timestamped {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @JsonBackReference
-    private User userId;
-
-    private LocalDateTime createdAt;
+    private User user;
 
 
-    public Board(String contents, User userId) {
+    public Board(String contents, User user) {
         this.contents = contents;
-        this.userId = userId;
-        this.createdAt = LocalDateTime.now();
+        this.user = user;
     }
+
+    public void update(String contents) {
+        this.contents = contents;
+    }
+
+
 }

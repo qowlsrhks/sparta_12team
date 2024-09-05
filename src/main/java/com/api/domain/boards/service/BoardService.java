@@ -11,11 +11,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,63 +25,44 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
 
+
     //    게시글 생성
     @Transactional
-    public Board createBoard(Long userId, BoardDto boardDto) {
+    public BoardDto createBoard(Long userId, BoardDto boardDto) {
         User user = userRepository.findById(userId).orElseThrow(()
                 -> new RuntimeException("회원이 존재하지 않습니다."));
         Board board = new Board(boardDto.getContents(), user);
-        return boardRepository.save(board);
+        return new BoardDto(boardRepository.save(board));
     }
 
-//    뉴스피드 목록
-    public Page<Board> getFriendBoardList(Long userId , int page) {
-        Optional<User> user = userRepository.findById(userId);
-        if(user.isPresent()){
-            Pageable pageable = PageRequest.of(page, 10);
-            return boardRepository.findByUserId(user.get(), pageable);
-        }else{
-            throw new RuntimeException("등록된 회원이 없습니다");
-        }
+    //    뉴스피드 목록
+    public Page<List<Board>> getFriendBoardList(Long userId, int page) {
+        Sort sort = Sort.by("createAt").descending();
+        Pageable pageable = PageRequest.of(page, 10, sort);
+        return boardRepository.findBoardsByUserFriends(userId, pageable);
     }
 
-//    뉴스피드 조회
-    public Page<Board> getFriendBoard(Long userId, int page) {
-        Optional<User> user = userRepository.findById(userId);
-        if(user.isPresent()){
-            Pageable pageable = PageRequest.of(page, 10);
-            return null;
-        }else {
-            throw new RuntimeException("등록된 회원이 없습니다");
-        }
-    }
 
     //유저 게시글 목록
-    public List<Board> userBoardList(Long userId) {
+    public Page<Board> userBoardList(Long userId, int page) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("등록된 회원을 찾을 수 없습니다"));
+        Pageable pageable = PageRequest.of(page, 10);
 
-        return boardRepository.findAllByUserId(user);
+        return boardRepository.findAllByUser(user, pageable);
     }
 
     //    유저 게시글 조회
-    public Board userBoard(Long userId, Long boardId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("등록된 회원을 찾을 수 없습니다"));
-        Board board = boardRepository.findByUserIdAndBoardId(user, boardId)
-                .orElseThrow(() -> new RuntimeException("등록된 게시판을 찾을 수 없습니다"));
-        if(board.getUserId().getUserId().equals(userId)) {
-            boardRepository.findAll();
-            return board;
-        }else{
-            throw new RuntimeException("You are not authorized to update this board");
-        }
+    public Board userBoard(Long boardId) {
+        return boardRepository.findById(boardId).orElseThrow(() -> new RuntimeException("게시글가 없습니다"));
+
 
     }
 
     //    모든 게시글 목록
-    public List<Board> boardAllList() {
-        return boardRepository.findAll();
+    public Page<Board> boardAllList(int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        return boardRepository.findAll(pageable);
     }
 
     //    게시글 수정
@@ -89,28 +70,27 @@ public class BoardService {
     public Board updateBoard(Long userId, Long boardId, BoardDto boardDto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("등록된 회원을 찾을 수 없습니다"));
-        Board board = boardRepository.findByUserIdAndBoardId(user, boardId)
+        Board board = boardRepository.findByUserAndBoardId(user, boardId)
                 .orElseThrow(() -> new RuntimeException("등록된 게시판을 찾을 수 없습니다"));
-        if(board.getUserId().getUserId().equals(userId)) {
-
-            Board updateBoard = new Board(boardDto.getContents(), user);
-            return boardRepository.save(updateBoard);
-        }else{
+        if (board.getUser().getUserId().equals(userId)) {
+            board.update(boardDto.getContents());
+            return board;
+        } else {
             throw new RuntimeException("You are not authorized to update this board");
         }
     }
 
     //    게시글 삭제
     @Transactional
-    public Board deleteBoard(Long userId,Long boardId) {
+    public Board deleteBoard(Long userId, Long boardId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("등록된 회원을 찾을 수 없습니다"));
-        Board board = boardRepository.findByUserIdAndBoardId(user, boardId)
+        Board board = boardRepository.findByUserAndBoardId(user, boardId)
                 .orElseThrow(() -> new RuntimeException("등록된 게시판을 찾을 수 없습니다"));
-        if(board.getUserId().getUserId().equals(userId)) {
+        if (board.getUser().getUserId().equals(userId)) {
             boardRepository.delete(board);
             return board;
-        }else{
+        } else {
             throw new RuntimeException("You are not authorized to delete this board");
         }
     }

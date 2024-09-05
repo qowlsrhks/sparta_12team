@@ -1,11 +1,16 @@
 package com.api.domain.users.entity;
 
+import com.api.domain.boards.entity.Board;
+import com.api.domain.boards.entity.Friend;
 import com.api.domain.common.Timestamped;
 import com.api.domain.users.dto.UserRequestDto;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -33,6 +38,14 @@ public class User extends Timestamped {
     // false : 비활성 회원
     @Column(nullable = false)
     private boolean isMember = true;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Board> boards;
+
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Friend> friends;
+
 
     public User(UserRequestDto requestDto){
         this.username = requestDto.getUsername();
