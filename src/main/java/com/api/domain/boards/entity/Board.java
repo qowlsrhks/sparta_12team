@@ -1,12 +1,12 @@
 package com.api.domain.boards.entity;
 
+import com.api.domain.comment.entity.Comment;
 import com.api.domain.common.Timestamped;
 import com.api.domain.users.entity.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
