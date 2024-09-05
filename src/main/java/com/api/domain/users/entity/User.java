@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -34,6 +37,22 @@ public class User extends Timestamped {
     // false : 비활성 회원
     @Column(nullable = false)
     private boolean isMember = true;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_friends",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "friend_id")
+    )
+    private List<User> friends = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_friend_requests",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "friend_id")
+    )
+    private List<User> friendRequests = new ArrayList<>();
 
     public User(UserCreateRequestDto requestDto){
         this.username = requestDto.getUsername();
