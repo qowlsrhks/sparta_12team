@@ -1,0 +1,72 @@
+package com.api.domain.boards.controller;
+
+import com.api.domain.boards.dto.BoardRequestDto;
+import com.api.domain.boards.dto.BoardResponseDto;
+import com.api.domain.boards.entity.Board;
+import com.api.domain.boards.service.BoardService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@Controller
+@RequiredArgsConstructor
+@RequestMapping("/api/boards")
+public class BoardController {
+
+    private final BoardService boardService;
+
+//    게시물 생성
+    @PostMapping
+    public ResponseEntity<BoardResponseDto> create(@RequestBody BoardRequestDto boardRequestDto) {
+        return ResponseEntity.ok( boardService.create(boardRequestDto));
+    }
+
+//    (미구현 기능)
+////    뉴스피드 목록
+//    @GetMapping("/{memberId}/friendBoardList")
+//    public ResponseEntity<Page<Board>> getFriendBoardList(@PathVariable Long memberId,@RequestParam int page) {
+//        return ResponseEntity.ok(boardService.getFriendBoardList(memberId, page));
+//    }
+//
+////    뉴스피드 조회
+//    @GetMapping("/{memberId}/{boardId}friendBoard")
+//    public ResponseEntity<Page<Board>> getFriendBoard(@PathVariable Long memberId, @PathVariable Long boardId, @RequestParam int page) {
+//        return ResponseEntity.ok(boardService.getFriendBoard(memberId, page));
+//    }
+
+
+//    특정 유저가 작성한 게시물 다건 조회
+    @GetMapping("/{memberId}/userBoardList")
+    public ResponseEntity<List<Board>> userBoardList(@PathVariable Long memberId) {
+        return ResponseEntity.ok(boardService.findBoardsByUserId(memberId));
+    }
+
+//    특정 유저가 작성한 게시물 단건 조회
+    @GetMapping("/{memberId}/{boardId}/userBoard")
+    public ResponseEntity<Board> findById(@PathVariable Long memberId, @PathVariable Long boardId) {
+        return ResponseEntity.ok(boardService.findByUserIdAndBoardId(memberId, boardId));
+    }
+
+//    모든 게시물 조회
+    @GetMapping("/boardAllList")
+    public ResponseEntity<List<Board>> findAll() {
+        return ResponseEntity.ok(boardService.findAll());
+    }
+
+
+//    게시물 수정
+    @PutMapping("/{boardId}")
+    public ResponseEntity<Board> update(@PathVariable Long boardId, @RequestBody BoardRequestDto boardRequestDto) {
+        Board board = boardService.update(boardId, boardRequestDto);
+        return ResponseEntity.ok(board);
+    }
+
+//    게시물 삭제
+    @DeleteMapping("/{boardId}")
+    public ResponseEntity<String> delete(@PathVariable Long boardId) {
+        return ResponseEntity.ok(boardService.delete(boardId));
+    }
+}
