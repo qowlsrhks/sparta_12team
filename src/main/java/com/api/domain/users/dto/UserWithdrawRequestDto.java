@@ -6,6 +6,5 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class UserWithdrawRequestDto {
-    private Long userId;
     private String password;
 }
