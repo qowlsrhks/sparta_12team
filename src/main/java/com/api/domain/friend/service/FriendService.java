@@ -1,5 +1,6 @@
 package com.api.domain.friend.service;
 
+import com.api.domain.auth.service.AuthService;
 import com.api.domain.friend.dto.FriendRequestDto;
 import com.api.domain.friend.dto.FriendResponseDto;
 import com.api.domain.friend.entity.FriendList;
@@ -22,6 +23,7 @@ public class FriendService {
     private final UserRepository userRepository;
     private final FriendListRepository friendListRepository;
     private final UserUtil userUtil;
+    private final AuthService authService;
 
     public List<FriendResponseDto> getFriends(Long userId) {
         User user = userUtil.findByUserId(userId);
@@ -45,9 +47,9 @@ public class FriendService {
         userRepository.save(friend);
     }
 
-    public void requestFriend(FriendRequestDto requestDto) {
-        User user = userUtil.findByUserId(requestDto.getUserId());
-        User friend = userUtil.findByUserId(requestDto.getFriendId());
+    public void requestFriend(Long friendId) {
+        User user = authService.currentUser();
+        User friend = userUtil.findByUserId(friendId);
 
         if (user.getId().equals(friend.getId())) {
             throw new IllegalArgumentException("자기자신을 친구 요청할 수 없습니다.");
@@ -66,9 +68,9 @@ public class FriendService {
     }
 
     @Transactional
-    public void acceptFriendRequest(FriendRequestDto requestDto) {
-        User user = userUtil.findByUserId(requestDto.getUserId());
-        User friend = userUtil.findByUserId(requestDto.getFriendId());
+    public void acceptFriendRequest(Long friendId) {
+        User user = userUtil.findByUserId(friendId);
+        User friend = authService.currentUser();
 
         if (user.getId().equals(friend.getId())) {
             throw new IllegalArgumentException("유저 자신을 친구로 맺을 수 없습니다.");
@@ -90,9 +92,9 @@ public class FriendService {
     }
 
     @Transactional
-    public void refuseFriendRequest(FriendRequestDto requestDto) {
-        User user = userUtil.findByUserId(requestDto.getUserId());
-        User friend = userUtil.findByUserId(requestDto.getFriendId());
+    public void refuseFriendRequest(Long friendId) {
+        User user = userUtil.findByUserId(friendId);
+        User friend = authService.currentUser();
 
         if (user.getId().equals(friend.getId())) {
             throw new IllegalArgumentException("유저 자신을 친구로 맺을 수 없습니다.");
@@ -110,13 +112,9 @@ public class FriendService {
     }
 
     @Transactional
-    public void removeFriend(FriendRequestDto requestDto) {
-        User user = userUtil.findByUserId(requestDto.getUserId());
-        User friend = userUtil.findByUserId(requestDto.getFriendId());
-
-        if (!user.getUsername().equals(friend.getUsername())) {
-            throw new IllegalArgumentException("Username or friendUsername does not match provided userId or friendId");
-        }
+    public void removeFriend(Long friendId) {
+        User user = authService.currentUser();
+        User friend = userUtil.findByUserId(friendId);
 
         if (!user.getFriends().contains(friend) || !friend.getFriends().contains(user)) {
             throw new IllegalArgumentException("친구가 아닙니다.");

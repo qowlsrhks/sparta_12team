@@ -25,7 +25,7 @@ public class LikeService {
 
     //좋아요 추가
     @Transactional
-    public void liked(Long boardId) {
+    public BoardResponseDto liked(Long boardId) {
         String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
 
         if(likeRepository.findByUserEmailAndBoardId(currentUserEmail, boardId).isPresent()) {
@@ -42,12 +42,13 @@ public class LikeService {
         foundBoard.setLikesCount(foundBoard.getLikesCount() + 1);
 
         likeRepository.save(like);
-        boardRepository.save(foundBoard);
+        Board savedboard = boardRepository.save(foundBoard);
+        return new BoardResponseDto(savedboard);
     }
 
     @Transactional
     //좋아요 취소
-    public void cancelLike(Long boardId) {
+    public BoardResponseDto cancelLike(Long boardId) {
         String currentEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         Like foundLike = likeRepository.findByUserEmailAndBoardId(currentEmail, boardId).orElseThrow(
                 () -> new IllegalArgumentException("해당 게시물은 좋아요 상태가 아닙니다!")
@@ -55,8 +56,9 @@ public class LikeService {
 
         Board foundBoard = boardRepository.findById(boardId).orElseThrow();
         foundBoard.setLikesCount(foundBoard.getLikesCount() - 1);
-        boardRepository.save(foundBoard);
+        Board savedboard = boardRepository.save(foundBoard);
         likeRepository.delete(foundLike);
+        return new BoardResponseDto(savedboard);
     }
 
     @Transactional

@@ -9,6 +9,7 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Entity
@@ -30,8 +31,8 @@ public class Board extends Timestamped {
     @JsonBackReference
     private User user;
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BoardImage> boardImages = new ArrayList<>();
+    @OneToOne(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    private BoardImage boardImage;
 
 
    @OneToMany(mappedBy = "board")
@@ -43,6 +44,10 @@ public class Board extends Timestamped {
     }
 
     public void addBoardImage(BoardImage boardImage) {
-        this.boardImages.add(boardImage);
+        this.boardImage = boardImage;
+    }
+
+    public Optional<BoardImage> getBoardImage() {
+        return Optional.ofNullable(boardImage);
     }
 }

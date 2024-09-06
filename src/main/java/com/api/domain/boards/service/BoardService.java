@@ -59,9 +59,7 @@ public class BoardService {
                     .build();
             boardImageRepository.save(image);
             board.addBoardImage(image);
-            BoardResponseDto containImageResponseDto= new BoardResponseDto(boardRepository.save(board));
-            containImageResponseDto.setImageUrls(image.getUrl());
-            return containImageResponseDto;
+            return new BoardResponseDto(boardRepository.save(board));
         }
 
         Board savedBoard = boardRepository.save(board);

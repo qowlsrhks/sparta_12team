@@ -15,14 +15,16 @@ import java.util.List;
 public class LikeController {
     private final LikeService likeService;
 
+    //좋아요 추가
     @PostMapping
-    public void liked(@RequestParam Long boardId) {
-        likeService.liked(boardId);
+    public ResponseEntity<BoardResponseDto> liked(@RequestParam Long boardId) {
+        return ResponseEntity.ok(likeService.liked(boardId));
     }
 
+    //좋아요 삭제
     @DeleteMapping
-    public void cancelLike(@RequestParam Long boardId) {
-        likeService.cancelLike(boardId);
+    public ResponseEntity<BoardResponseDto> cancelLike(@RequestParam Long boardId) {
+        return ResponseEntity.ok(likeService.cancelLike(boardId));
     }
 
     @GetMapping("/who-liked")

@@ -21,9 +21,13 @@ public class BoardImage {
 
     private String url;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "board_id")
     private Board board;
+
+    public String getImageUrl() {
+        return url;
+    }
 
 
 }

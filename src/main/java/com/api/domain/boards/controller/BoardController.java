@@ -24,11 +24,7 @@ public class BoardController {
 
 //    게시물 생성
     @PostMapping
-    public ResponseEntity<BoardResponseDto> create(@RequestParam("contents") String contents, @RequestParam("file") MultipartFile file) {
-
-        log.info("contents {}", contents);
-        log.info("파일 이름: {}", file.getOriginalFilename());
-
+    public ResponseEntity<BoardResponseDto> create(@RequestParam("contents") String contents, @RequestParam(value = "file",required = false) MultipartFile file) {
         return ResponseEntity.ok( boardService.create(contents, file));
     }
 

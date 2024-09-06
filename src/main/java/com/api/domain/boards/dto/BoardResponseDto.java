@@ -1,6 +1,7 @@
 package com.api.domain.boards.dto;
 
 import com.api.domain.boards.entity.Board;
+import com.api.domain.boards.entity.BoardImage;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +15,7 @@ public class BoardResponseDto {
     private final String contents;
     private final Long likesCount;
     private final LocalDateTime modifiedAt;
-    private String imageUrls;
+    private String imageUrl;
 
     public BoardResponseDto(Board board) {
         this.boardId = board.getId();
@@ -22,5 +23,8 @@ public class BoardResponseDto {
         this.contents = board.getContents();
         this.likesCount = board.getLikesCount();
         this.modifiedAt = board.getModifiedAt();
+        this.imageUrl = board.getBoardImage()
+                .map(BoardImage::getImageUrl)
+                .orElse("null");
     }
 }
