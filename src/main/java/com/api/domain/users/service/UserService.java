@@ -57,6 +57,15 @@ public class UserService {
         return new UserResponseDto(user);
     }
 
+    @Transactional(readOnly = true)
+    public MyProfileResponseDto myProfile() {
+        User me = authService.currentUser();
+
+        return new MyProfileResponseDto(me);
+
+
+    }
+
     // 회원 정보 수정(이름, 소개)
     @Transactional
     public UserResponseDto update(UserModifyRequestDto requestDto) {

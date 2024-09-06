@@ -4,6 +4,7 @@ import com.api.domain.auth.service.AuthService;
 import com.api.domain.users.dto.*;
 import com.api.domain.users.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +28,12 @@ public class UserController {
     @GetMapping("/{userId}")
     public ResponseEntity<UserResponseDto> findById(@PathVariable Long userId){
         return ResponseEntity.ok(userService.findById(userId));
+    }
+
+    //내 프로필 보기
+    @GetMapping("/my-profile")
+    public ResponseEntity<MyProfileResponseDto> myProfile() {
+        return ResponseEntity.ok(userService.myProfile());
     }
 
     // 회원 정보 수정(회원이름, 소개)
