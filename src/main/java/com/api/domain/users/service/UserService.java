@@ -90,8 +90,8 @@ public class UserService {
 
     // 비밀번호 변경
     @Transactional
-    public void update(Long userId, UserPasswordRequestDto requestDto) {
-        User user = userUtil.findByUserId(userId);
+    public void updatePassword(UserPasswordRequestDto requestDto) {
+        User user = authService.currentUser();
 
         if(!authService.isUserOwner(user)) {
             throw new IllegalArgumentException("본인만 수정할 수 있습니다.");
@@ -111,7 +111,7 @@ public class UserService {
         }
 
         // 현재 비밀번호와 변경할 비밀번호 일치 여부 확인
-        if(passwordEncoder.matches(currentPassword, user.getPassword())){
+        if(passwordEncoder.matches(newPassword, user.getPassword())){
             throw new IllegalArgumentException("현재 비밀번호와 동일합니다.");
         }
 
@@ -124,7 +124,7 @@ public class UserService {
     // 회원 탈퇴(isMember : true -> false)
     @Transactional
     public UserStatusResponseDto update(UserWithdrawRequestDto requestDto) {
-        User user = userUtil.findByUserId(requestDto.getUserId());
+        User user = authService.currentUser();
         if(!authService.isUserOwner(user)) {
             throw new IllegalArgumentException("본인만 탈퇴할 수 있습니다.");
         }

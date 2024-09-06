@@ -16,7 +16,7 @@ public class EmailService {
     private final JavaMailSender javaMailSender;
     private final UserRedisRepository userRedisRepository;
 
-    private final String SENDER_EMAIL = "cnddnjs7558@gmail.com";
+    private final String SENDER_EMAIL = "ssjcd0913@gmail.com";
 
     public void sendEmail(String email) {
         int number = createNumber();

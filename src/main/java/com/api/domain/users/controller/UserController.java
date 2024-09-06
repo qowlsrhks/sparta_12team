@@ -43,9 +43,9 @@ public class UserController {
     }
 
     // 비밀번호 변경
-    @PutMapping("/{userId}")
-    public void update(@PathVariable Long userId, @RequestBody UserPasswordRequestDto requestDto){
-        userService.update(userId, requestDto);
+    @PutMapping("/change-password")
+    public void update(@RequestBody UserPasswordRequestDto requestDto){
+        userService.updatePassword(requestDto);
     }
 
     // 회원 탈퇴 -> isMember = false;
